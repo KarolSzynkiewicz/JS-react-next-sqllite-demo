@@ -61,8 +61,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Przycisk nawigacyjny - przykład użycia Link */}
-        <div className="flex gap-4">
+        {/* Przyciski nawigacyjne - przykład użycia Link */}
+        <div className="flex flex-wrap gap-4 justify-center">
           {/* 
             Link z Next.js - to jest kluczowy komponent do nawigacji
             Właściwości:
@@ -75,6 +75,27 @@ export default function Home() {
             className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold text-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
           >
             👉 Przejdź do strony "O nas"
+          </Link>
+          
+          <Link 
+            href="/produkty"
+            className="px-8 py-4 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            🗄️ CRUD z SQLite - Produkty
+          </Link>
+          
+          <Link 
+            href="/stack"
+            className="px-8 py-4 bg-purple-600 text-white rounded-lg font-semibold text-lg hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            📚 Dokumentacja Stacku
+          </Link>
+          
+          <Link 
+            href="/pogoda"
+            className="px-8 py-4 bg-cyan-600 text-white rounded-lg font-semibold text-lg hover:bg-cyan-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            🌤️ Sprawdź Pogodę
           </Link>
         </div>
 
