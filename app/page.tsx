@@ -1,63 +1,88 @@
-import Image from "next/image";
+/**
+ * STRONA STARTOWA - app/page.tsx
+ * 
+ * W Next.js App Router, plik page.tsx w katalogu app/ automatycznie staje się stroną główną.
+ * Ta strona jest dostępna pod adresem: http://localhost:3000/
+ * 
+ * Jak działa routing w Next.js App Router:
+ * 1. Każdy folder w katalogu app/ reprezentuje segment URL-a
+ * 2. Plik page.tsx wewnątrz folderu definiuje stronę dla tego segmentu
+ * 3. Przykład: app/o-nas/page.tsx → URL: /o-nas
+ * 4. Przykład: app/blog/[id]/page.tsx → URL: /blog/123 (dynamiczny routing)
+ * 
+ * Komponenty w Next.js:
+ * - Muszą być eksportowane jako "default export"
+ * - Mogą być Server Components (domyślnie) lub Client Components (z "use client")
+ * - Server Components renderują się na serwerze (szybsze, lepsze SEO)
+ */
 
+// Import komponentu Link z Next.js - używamy go do nawigacji między stronami
+// Link zapewnia client-side navigation (szybkie przełączanie bez przeładowania strony)
+import Link from "next/link";
+
+/**
+ * Komponent Home - główna strona aplikacji
+ * Jest to Server Component (domyślnie w Next.js 13+)
+ * Renderuje się na serwerze przed wysłaniem do przeglądarki
+ */
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center py-16 px-8">
+        
+        {/* Sekcja nagłówkowa */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            🚀 Lekcja Next.js - Routing
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+            Witaj na stronie startowej! To jest strona główna aplikacji.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+
+        {/* Sekcja wyjaśniająca routing */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8 w-full">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+            📚 Jak działa routing w Next.js?
+          </h2>
+          <div className="space-y-4 text-gray-700 dark:text-gray-300">
+            <p>
+              <strong>1. File-based Routing:</strong> Struktura folderów w katalogu <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">app/</code> automatycznie tworzy trasy.
+            </p>
+            <p>
+              <strong>2. Ta strona:</strong> Plik <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">app/page.tsx</code> odpowiada adresowi <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/</code>
+            </p>
+            <p>
+              <strong>3. Inne strony:</strong> <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">app/o-nas/page.tsx</code> → <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/o-nas</code>
+            </p>
+            <p>
+              <strong>4. Link Component:</strong> Używamy <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">Link</code> zamiast <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">a</code> dla client-side navigation.
+            </p>
+          </div>
+        </div>
+
+        {/* Przycisk nawigacyjny - przykład użycia Link */}
+        <div className="flex gap-4">
+          {/* 
+            Link z Next.js - to jest kluczowy komponent do nawigacji
+            Właściwości:
+            - href: ścieżka do strony (zgodna ze strukturą folderów)
+            - className: style Tailwind CSS
+            - Prefetch: automatycznie pobiera stronę w tle (domyślnie true)
+          */}
+          <Link 
+            href="/o-nas"
+            className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold text-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            👉 Przejdź do strony "O nas"
+          </Link>
+        </div>
+
+        {/* Dodatkowe informacje */}
+        <div className="mt-12 text-center text-gray-600 dark:text-gray-400">
+          <p className="text-sm">
+            💡 Kliknij przycisk powyżej, aby zobaczyć jak działa nawigacja między stronami!
+          </p>
         </div>
       </main>
     </div>
