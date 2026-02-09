@@ -184,6 +184,7 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
   const [activeTab, setActiveTab] = useState<Tab>('demo');
   const [activeNodes, setActiveNodes] = useState<Set<string>>(new Set());
   const [currentStep, setCurrentStep] = useState<string | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Helper do logowania
   const logAction = (log: Omit<StateLog, 'id' | 'timestamp'>) => {
@@ -227,31 +228,43 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
     }
   };
 
-  // Handle tab change with logging
+  // Handle tab change with logging and animation
   const handleTabChange = (tab: Tab) => {
-    setActiveTab(tab);
+    if (tab === activeTab) return;
     
-    const tabNames = {
-      'demo': 'Live Demo',
-      'flowchart': 'Flow Map',
-      'code': 'Code Explorer',
-      'quiz': 'Test Wiedzy',
-      'resources': 'Zasoby'
-    };
+    setIsTransitioning(true);
     
-    logAction({
-      type: 'function',
-      name: `Przełączono zakładkę → ${tabNames[tab]}`,
-      description: `User navigation: Changed active tab from ${activeTab} to ${tab}`,
-      friendlyDescription: `📑 Przełączyłeś się na zakładkę "${tabNames[tab]}". ${
-        tab === 'demo' ? 'Tutaj możesz dodawać i usuwać notatki, obserwując każdy krok w czasie rzeczywistym!' :
-        tab === 'flowchart' ? 'Zobacz wizualizację przepływu danych przez cały stack. Kliknij node żeby zobaczyć szczegóły!' :
-        tab === 'code' ? 'Przeglądaj kod każdego kroku z wyjaśnieniami line-by-line. Idealny do nauki!' :
-        tab === 'quiz' ? 'Sprawdź swoją wiedzę! 10 pytań od beginner do advanced.' :
-        'Kontynuuj naukę z curated resources - oficjalna dokumentacja, tutoriale i więcej!'
-      }`,
-      currentStep: undefined
-    });
+    // Fade out
+    setTimeout(() => {
+      setActiveTab(tab);
+      
+      const tabNames = {
+        'demo': 'Live Demo',
+        'flowchart': 'Flow Map',
+        'code': 'Code Explorer',
+        'quiz': 'Test Wiedzy',
+        'resources': 'Zasoby'
+      };
+      
+      logAction({
+        type: 'function',
+        name: `Przełączono zakładkę → ${tabNames[tab]}`,
+        description: `User navigation: Changed active tab from ${activeTab} to ${tab}`,
+        friendlyDescription: `📑 Przełączyłeś się na zakładkę "${tabNames[tab]}". ${
+          tab === 'demo' ? 'Tutaj możesz dodawać i usuwać notatki, obserwując każdy krok w czasie rzeczywistym!' :
+          tab === 'flowchart' ? 'Zobacz wizualizację przepływu danych przez cały stack. Kliknij node żeby zobaczyć szczegóły!' :
+          tab === 'code' ? 'Przeglądaj kod każdego kroku z wyjaśnieniami line-by-line. Idealny do nauki!' :
+          tab === 'quiz' ? 'Sprawdź swoją wiedzę! 10 pytań od beginner do advanced.' :
+          'Kontynuuj naukę z curated resources - oficjalna dokumentacja, tutoriale i więcej!'
+        }`,
+        currentStep: undefined
+      });
+      
+      // Fade in
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 50);
+    }, 150);
   };
 
   return (
@@ -284,10 +297,10 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
                 className={`
-                  flex-shrink-0 px-6 py-4 rounded-t-2xl font-bold transition-all
+                  flex-shrink-0 px-6 py-4 rounded-t-2xl font-bold transition-all duration-300 transform
                   ${activeTab === tab.id
-                    ? 'bg-slate-950 text-white shadow-xl scale-105'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                    ? 'bg-slate-950 text-white shadow-xl scale-105 -translate-y-1'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:scale-102'
                   }
                 `}
               >
@@ -307,7 +320,7 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
       </div>
 
       {/* Tab Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className={`container mx-auto px-4 py-8 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         {activeTab === 'demo' && (
           <StackDemoEnhanced
             onAction={handleAction}
