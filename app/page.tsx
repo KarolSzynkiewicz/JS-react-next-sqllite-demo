@@ -4,9 +4,47 @@
  * Interaktywna platforma edukacyjna do nauki React, Next.js i SQLite
  */
 
+'use client';
+
 import Link from "next/link";
+import { useState } from "react";
+import LessonSlider from "./components/LessonSlider";
+import { javascriptBasicsLesson } from "./lessons/javascript-basics";
 
 export default function Home() {
+  const [showLesson, setShowLesson] = useState(false);
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+
+  const handleStartLesson = () => {
+    setShowLesson(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCompleteLesson = () => {
+    setCompletedLessons([...completedLessons, 'js-basics']);
+    setShowLesson(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (showLesson) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 py-16">
+        <div className="container mx-auto px-4">
+          <button
+            onClick={() => setShowLesson(false)}
+            className="mb-6 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold transition-all flex items-center gap-2"
+          >
+            ← Wróć do strony głównej
+          </button>
+          <LessonSlider 
+            lesson={javascriptBasicsLesson} 
+            onComplete={handleCompleteLesson}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
       {/* Hero Section */}
@@ -46,7 +84,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Co to jest DOM? */}
+      {/* Podstawy JavaScript - Interaktywna Lekcja */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-3xl p-8 md:p-12 border-2 border-yellow-500/50">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-6xl">📘</span>
+              <div>
+                <h2 className="text-4xl md:text-5xl font-black text-white mb-2">
+                  Zacznij od podstaw!
+                </h2>
+                <p className="text-xl text-white/90">
+                  Interaktywna lekcja JavaScript dla początkujących
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white/10 rounded-xl p-6 mb-6">
+              <h3 className="text-2xl font-bold text-white mb-4">📚 Czego się nauczysz?</h3>
+              <div className="grid md:grid-cols-2 gap-3 text-white/90">
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Co to jest JavaScript
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Zmienne (let, const, var)
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Typy danych
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Typowanie (JS vs TS)
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> Obiekty
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✓</span> OOP i DOM
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <button
+                onClick={handleStartLesson}
+                className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xl font-bold rounded-2xl hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-2xl"
+              >
+                🚀 Rozpocznij Lekcję
+              </button>
+              <div className="text-white/70 text-sm">
+                ⏱️ ~15 minut • 8 slajdów • Poziom: Początkujący
+              </div>
+            </div>
+
+            {completedLessons.includes('js-basics') && (
+              <div className="mt-4 bg-green-500/20 border border-green-500 rounded-xl p-4 text-center">
+                <span className="text-2xl mr-2">🎉</span>
+                <strong className="text-green-400">Ukończono!</strong>
+                <span className="text-white/80"> - Możesz przejrzeć lekcję ponownie</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Co to jest DOM? - Skrócone */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white/20">
