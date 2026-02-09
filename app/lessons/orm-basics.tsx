@@ -2,7 +2,7 @@ import { Lesson } from '../components/LessonSlider';
 
 export const ormBasicsLesson: Lesson = {
   id: 'orm-basics',
-  title: 'Prisma ORM - Modele jak w Laravel',
+  title: 'Prisma ORM - Modele i Relacje',
   description: 'ORM z modelami i prostym API',
   icon: '🗺️',
   slides: [
@@ -361,11 +361,11 @@ model Zamowienie {
             <div className="bg-green-500/20 rounded-xl p-5 border-l-4 border-green-500">
               <h4 className="text-lg font-bold mb-2 text-green-400">✅ Zalety Prisma</h4>
               <ul className="text-sm space-y-1">
-                <li>• Modele w plikach .prisma (jak Laravel!)</li>
-                <li>• API identyczne jak Laravel Eloquent</li>
+                <li>• Modele w plikach .prisma (czytelne definicje)</li>
+                <li>• Proste API (findMany, create, update)</li>
                 <li>• Type-safe (TypeScript)</li>
                 <li>• Automatyczne migracje</li>
-                <li>• Relacje (hasMany, belongsTo)</li>
+                <li>• Relacje (jeden do wielu, wiele do wielu)</li>
                 <li>• Prisma Studio (GUI do bazy)</li>
                 <li>• Świetne wsparcie SQLite</li>
               </ul>
@@ -550,99 +550,164 @@ model Zamowienie {
     },
     {
       id: 'relations',
-      title: 'Relacje - hasMany i belongsTo',
+      title: 'Relacje - Po co i jak działają?',
       icon: '🔗',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-purple-400">Relacje</strong> w Prisma działają jak w Laravel! 
-            <code>hasMany</code>, <code>belongsTo</code> - wszystko wspierane!
+            <strong className="text-purple-400">Relacje</strong> pozwalają łączyć dane z różnych tabel. 
+            W prawdziwym życiu często tego potrzebujesz!
           </p>
 
-          <div className="bg-purple-500/20 rounded-xl p-6 border-2 border-purple-500/50">
-            <h3 className="text-2xl font-bold mb-4">🔗 Przykład relacji</h3>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`// Jeden Produkt ma wiele Zamówień (hasMany)
-model Produkt {
-  id        Int      @id @default(autoincrement())
-  nazwa     String
-  cena      Float
-  
-  // hasMany - jeden produkt, wiele zamówień
-  zamowienia Zamowienie[]  // Tablica = hasMany
-}
-
-// Zamówienie należy do Produktu (belongsTo)
-model Zamowienie {
-  id        Int      @id @default(autoincrement())
-  ilosc     Int
-  produktId Int      // Foreign key
-  
-  // belongsTo - zamówienie należy do produktu
-  produkt   Produkt  @relation(fields: [produktId], references: [id])
-}`}</code>
-            </pre>
-          </div>
-
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🎯 Jak to działa?</h4>
-            <div className="space-y-3 text-sm">
-              <div className="bg-white/10 rounded p-3">
-                <strong className="text-blue-400">hasMany:</strong>
-                <p className="mt-1">
-                  <code className="bg-black/30 px-1 rounded">zamowienia Zamowienie[]</code> - 
-                  tablica oznacza "wiele" (hasMany)
+            <h3 className="text-2xl font-bold mb-4">🌍 Przykłady z życia</h3>
+            <div className="space-y-3 text-base">
+              <div className="bg-white/10 rounded p-4">
+                <strong className="text-2xl">👤 Użytkownik → Posty</strong>
+                <p className="text-sm mt-2">
+                  Jeden użytkownik napisał wiele postów na blogu. 
+                  Chcesz wyświetlić użytkownika i wszystkie jego posty.
                 </p>
               </div>
-              <div className="bg-white/10 rounded p-3">
-                <strong className="text-green-400">belongsTo:</strong>
-                <p className="mt-1">
-                  <code className="bg-black/30 px-1 rounded">produkt Produkt</code> - 
-                  pojedynczy obiekt oznacza "należy do" (belongsTo)
+              <div className="bg-white/10 rounded p-4">
+                <strong className="text-2xl">👔 Kierownik → Pracownicy</strong>
+                <p className="text-sm mt-2">
+                  Kierownik ma wiele pracowników pod sobą. 
+                  Chcesz wyświetlić kierownika i listę jego pracowników.
                 </p>
               </div>
-              <div className="bg-white/10 rounded p-3">
-                <strong className="text-purple-400">@relation:</strong>
-                <p className="mt-1">
-                  Definiuje jak tabele są połączone (foreign key)
+              <div className="bg-white/10 rounded p-4">
+                <strong className="text-2xl">📦 Zamówienie → Produkty</strong>
+                <p className="text-sm mt-2">
+                  Zamówienie zawiera wiele produktów. 
+                  Chcesz wyświetlić zamówienie i wszystkie produkty w nim.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-green-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">💻 Użycie relacji w queries</h4>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`// Pobierz produkt z jego zamówieniami (include)
-const produkt = await prisma.produkt.findUnique({
-  where: { id: 1 },
-  include: {
-    zamowienia: true  // Załaduj relację!
-  }
-});
-// produkt.zamowienia - tablica zamówień!
-
-// Pobierz zamówienie z produktem
-const zamowienie = await prisma.zamowienie.findUnique({
-  where: { id: 1 },
-  include: {
-    produkt: true  // Załaduj produkt!
-  }
-});
-// zamowienie.produkt - obiekt produktu!`}</code>
+          <div className="bg-red-500/20 rounded-xl p-6 border-2 border-red-500/50">
+            <h3 className="text-2xl font-bold mb-4">❌ Bez relacji - skomplikowane SQL</h3>
+            <p className="mb-3 text-sm">Bez ORM musiałbyś pisać skomplikowane SQL queries:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-red-300">{`SELECT * FROM uzytkownicy WHERE id = 1;`}</code>
             </pre>
-            <p className="text-sm mt-3">
-              <strong>To jest jak Laravel Eloquent!</strong> <code>include</code> = <code>with()</code> w Laravel
+            <p className="text-xs mt-2 mb-2">Potem osobne query dla postów:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-red-300">{`SELECT * FROM posty WHERE uzytkownik_id = 1;`}</code>
+            </pre>
+            <p className="text-sm mt-3">Musisz:</p>
+            <ul className="text-xs mt-2 space-y-1 ml-4">
+              <li>• Wykonać 2 osobne queries</li>
+              <li>• Pamiętać nazwy kolumn (uzytkownik_id)</li>
+              <li>• Ręcznie połączyć dane w kodzie</li>
+              <li>• Napisać dużo kodu!</li>
+            </ul>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">✅ Z relacjami - proste!</h3>
+            <p className="mb-3 text-sm">Z Prisma wystarczy jedna linijka:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`const uzytkownik = await prisma.uzytkownik.findUnique({
+  where: { id: 1 },
+  include: { posty: true }
+});`}</code>
+            </pre>
+            <p className="text-sm mt-3 mb-2">Teraz masz:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`uzytkownik.imie      // "Jan"
+uzytkownik.posty    // Tablica postów!
+uzytkownik.posty[0].tytul  // Tytuł pierwszego posta`}</code>
+            </pre>
+            <p className="text-sm mt-3">Zalety:</p>
+            <ul className="text-xs mt-2 space-y-1 ml-4">
+              <li>• Jedno query zamiast dwóch</li>
+              <li>• Proste API (include)</li>
+              <li>• Automatyczne łączenie danych</li>
+              <li>• Mało kodu!</li>
+            </ul>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Pamiętaj:</strong> Relacje = łączenie danych z różnych tabel. 
+            Zamiast skomplikowanych SQL queries, masz obiekt z relacją!
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'relations-how',
+      title: 'Jak definiować relacje?',
+      icon: '🔗',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Relacje definiujesz w <code className="bg-black/30 px-2 py-1 rounded">schema.prisma</code>. 
+            Zobaczmy przykład krok po kroku.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">👤 Przykład: Użytkownik i Posty</h3>
+            <p className="text-sm mb-3">Model Uzytkownik:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`model Uzytkownik {
+  id    Int    @id @default(autoincrement())
+  imie  String
+  
+  posty Post[]
+}`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              <strong>posty Post[]</strong> = tablica postów. Oznacza: jeden użytkownik ma wiele postów
+            </p>
+
+            <p className="text-sm mb-3">Model Post:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`model Post {
+  id            Int        @id @default(autoincrement())
+  tytul         String
+  uzytkownikId  Int
+  
+  uzytkownik    Uzytkownik @relation(fields: [uzytkownikId], references: [id])
+}`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              <strong>uzytkownik Uzytkownik</strong> = post należy do użytkownika<br/>
+              <strong>@relation</strong> = połączenie przez uzytkownikId
+            </p>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">💡 Jak to użyć?</h3>
+            <p className="text-sm mb-3">Pobierz użytkownika z postami:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`const uzytkownik = await prisma.uzytkownik.findUnique({
+  where: { id: 1 },
+  include: { posty: true }
+});`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              <strong>include: {`{ posty: true }`}</strong> = załaduj posty tego użytkownika
+            </p>
+
+            <p className="text-sm mb-3">Sprawdź dane:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`console.log(uzytkownik.imie);         // "Jan"
+console.log(uzytkownik.posty.length);  // 5
+console.log(uzytkownik.posty[0].tytul);// "Mój pierwszy post"`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              Masz obiekt użytkownika z tablicą postów - proste!
             </p>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Inne typy relacji:</strong>
+            <strong>💡 Typy relacji:</strong>
             <ul className="text-sm mt-2 space-y-1">
-              <li>• <code className="bg-black/30 px-1 rounded">hasOne</code> - jeden do jednego</li>
-              <li>• <code className="bg-black/30 px-1 rounded">hasMany</code> - jeden do wielu</li>
-              <li>• <code className="bg-black/30 px-1 rounded">belongsTo</code> - wiele do jednego</li>
-              <li>• <code className="bg-black/30 px-1 rounded">manyToMany</code> - wiele do wielu</li>
+              <li>• <strong>Jeden do wielu</strong> - Użytkownik → Posty (tablica [])</li>
+              <li>• <strong>Wiele do jednego</strong> - Post → Użytkownik (pojedynczy)</li>
+              <li>• <strong>Wiele do wielu</strong> - Studenci ↔ Kursy (obie tablice)</li>
             </ul>
           </div>
         </div>
@@ -650,66 +715,101 @@ const zamowienie = await prisma.zamowienie.findUnique({
     },
     {
       id: 'database-connection',
-      title: 'Połączenie z bazą (lib/prisma.ts)',
+      title: 'lib/prisma.ts - Połączenie z bazą',
       icon: '🔌',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Stwórz instancję Prisma Client do użycia w całej aplikacji!
+            Żeby używać Prisma, musisz stworzyć <strong className="text-blue-400">połączenie z bazą</strong>. 
+            Tworzymy plik <code>lib/prisma.ts</code> który zrobi to za Ciebie.
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">💻 lib/prisma.ts</h3>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`import { PrismaClient } from '@prisma/client';
-
-// Singleton pattern - jedna instancja dla całej aplikacji
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' 
-    ? ['query', 'error', 'warn'] 
-    : ['error'],
-});
-
-// W development, zapisz instancję w globalThis
-// (Next.js hot reload nie tworzy nowych instancji)
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}`}</code>
-            </pre>
-          </div>
-
-          <div className="bg-purple-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🎯 Co się dzieje?</h4>
-            <ul className="space-y-2 text-sm">
-              <li>• <strong>PrismaClient</strong> - główna klasa do queries</li>
-              <li>• <strong>Singleton</strong> - jedna instancja (nie tworz wielu!)</li>
-              <li>• <strong>globalThis</strong> - zapisuje instancję w development (Next.js hot reload)</li>
-              <li>• <strong>log</strong> - opcjonalne logowanie queries (tylko w dev)</li>
-            </ul>
-          </div>
-
-          <div className="bg-green-500/20 rounded-xl p-5">
-            <h4 className="text-lg font-bold mb-3">📝 Użycie</h4>
-            <pre className="bg-black/50 rounded p-3 text-xs">
-              <code className="text-green-400">{`// W każdym pliku:
-import { prisma } from '@/lib/prisma';
-
-// Użyj modeli!
-const produkty = await prisma.produkt.findMany();
-const produkt = await prisma.produkt.findUnique({ where: { id: 1 } });`}</code>
-            </pre>
-            <p className="text-sm mt-3">
-              <strong>prisma.produkt</strong> - model Produkt z schema.prisma!
+            <h3 className="text-2xl font-bold mb-4">🤔 Po co ten plik?</h3>
+            <p className="text-base mb-3">
+              <strong>Problem:</strong> Gdybyś tworzył nowe połączenie w każdym pliku, 
+              miałbyś dziesiątki połączeń do bazy. To jest wolne i zużywa pamięć!
+            </p>
+            <p className="text-base">
+              <strong>Rozwiązanie:</strong> Stwórz <strong>jedno połączenie</strong> w pliku 
+              <code className="bg-black/30 px-2 py-1 rounded">lib/prisma.ts</code> 
+              i używaj go wszędzie. To się nazywa <strong>"Singleton Pattern"</strong>.
             </p>
           </div>
 
-          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Production:</strong> W produkcji (Docker) użyj <code className="bg-black/30 px-2 py-1 rounded">file:/app/data/database.db</code> 
-            w <code className="bg-black/30 px-2 py-1 rounded">schema.prisma</code>
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">📄 Plik: lib/prisma.ts</h3>
+            <p className="text-sm mb-3">Krok 1: Import</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`import { PrismaClient } from '@prisma/client';`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Import głównej klasy Prisma
+            </p>
+
+            <p className="text-sm mb-3">Krok 2: Stwórz połączenie</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`export const prisma = new PrismaClient();`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Tworzy nowe połączenie z bazą i eksportuje jako "prisma"
+            </p>
+
+            <p className="text-sm mb-3">Krok 3: Opcjonalne logowanie (w development)</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`export const prisma = new PrismaClient({
+  log: process.env.NODE_ENV === 'development' 
+    ? ['query'] 
+    : []
+});`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              W development pokazuje SQL queries w konsoli (przydatne do debugowania!)
+            </p>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📍 Jak używać w innych plikach?</h3>
+            <p className="text-sm mb-3"><strong>Use case:</strong> Chcesz pobierać produkty w API Route</p>
+            <p className="text-xs mb-2 opacity-70">Plik: app/api/produkty/route.ts</p>
+            
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm mb-2">1. Import prisma:</p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-purple-400">{`import { prisma } from '@/lib/prisma';`}</code>
+                </pre>
+                <p className="text-xs mt-1 opacity-70">
+                  Importujesz połączenie z lib/prisma.ts
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm mb-2">2. Użyj do queries:</p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-purple-400">{`export async function GET() {
+  const produkty = await prisma.produkt.findMany();
+  return Response.json(produkty);
+}`}</code>
+                </pre>
+                <p className="text-xs mt-1 opacity-70">
+                  Używasz prisma.produkt.findMany() żeby pobrać wszystkie produkty
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-6 border-2 border-yellow-500/50">
+            <h4 className="text-xl font-bold mb-3">💡 Singleton Pattern - Co to znaczy?</h4>
+            <p className="text-sm mb-2">
+              <strong>Singleton</strong> = tylko jedna instancja (jedno połączenie) dla całej aplikacji
+            </p>
+            <ul className="text-xs space-y-1 mt-2 ml-4">
+              <li>• Tworzysz połączenie raz w lib/prisma.ts</li>
+              <li>• Importujesz je wszędzie gdzie potrzebujesz</li>
+              <li>• Używasz tego samego połączenia (szybkie, oszczędne)</li>
+              <li>• Next.js cache'uje moduły - nie tworzy nowych połączeń!</li>
+            </ul>
           </div>
         </div>
       )
@@ -721,7 +821,7 @@ const produkt = await prisma.produkt.findUnique({ where: { id: 1 } });`}</code>
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Prisma ma <strong className="text-purple-400">API identyczne jak Laravel Eloquent</strong>! 
+            Prisma ma <strong className="text-purple-400">proste i czytelne API</strong>! 
             <code>findMany()</code> = <code>all()</code>, <code>findUnique()</code> = <code>find()</code>!
           </p>
 
