@@ -19,17 +19,27 @@ import fs from 'fs';
 
 /**
  * Ścieżka do pliku bazy danych
- * Baza będzie przechowywana w katalogu projektu jako database.db
+ * W produkcji (Docker/Railway) używamy /app/data, lokalnie process.cwd()
  */
-const dbPath = path.join(process.cwd(), 'database.db');
+const dbPath = process.env.NODE_ENV === 'production'
+  ? path.join('/app', 'data', 'database.db')
+  : path.join(process.cwd(), 'database.db');
 
 /**
  * Funkcja do inicjalizacji bazy danych
  * Tworzy plik bazy danych (jeśli nie istnieje) i tabele
  */
 function initDatabase() {
+  // Upewnij się, że katalog istnieje
+  const dbDir = path.dirname(dbPath);
+  if (!fs.existsSync(dbDir)) {
+    console.log(`📁 Tworzę katalog dla bazy danych: ${dbDir}`);
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+  
   // Utwórz połączenie z bazą danych
   // Jeśli plik nie istnieje, SQLite automatycznie go utworzy
+  console.log(`📦 Inicjalizacja bazy danych: ${dbPath}`);
   const db = new Database(dbPath);
   
   // Włącz foreign keys (dla przyszłych relacji między tabelami)

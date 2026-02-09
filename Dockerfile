@@ -38,8 +38,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Create directory for SQLite database (ephemeral storage on Railway)
-RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
+# Create directory for SQLite database with proper permissions
+RUN mkdir -p /app/data && \
+    chown -R nextjs:nodejs /app && \
+    chmod -R 755 /app/data
 
 USER nextjs
 
