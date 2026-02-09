@@ -587,7 +587,7 @@ samochod.wyswietlInfo();  // Toyota Corolla`}</code>
             <h4 className="text-xl font-bold mb-3">📝 Wyjaśnienie linia po linii:</h4>
             <div className="space-y-2 text-sm">
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">przyspiesz: function() { ... }</code>
+                <code className="text-green-400">{'przyspiesz: function() { ... }'}</code>
                 <p className="text-xs mt-1 opacity-70">To jest metoda - funkcja wewnątrz obiektu</p>
               </div>
               <div className="bg-white/10 rounded p-2">
@@ -657,7 +657,7 @@ auto1.przyspiesz();  // Prędkość: 20 km/h (Toyota)`}</code>
             <h4 className="text-xl font-bold mb-3">📝 Wyjaśnienie:</h4>
             <div className="space-y-2 text-sm">
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">class Samochod { ... }</code>
+                <code className="text-green-400">{'class Samochod { ... }'}</code>
                 <p className="text-xs mt-1 opacity-70">Definicja klasy - szablon samochodu</p>
               </div>
               <div className="bg-white/10 rounded p-2">
