@@ -8,92 +8,313 @@ export const ormBasicsLesson: Lesson = {
   slides: [
     {
       id: 'what-is-orm-model',
-      title: 'Co to jest ORM i Model?',
+      title: 'Co to jest Model? - Mapowanie bazy na obiekty',
       icon: '🗺️',
       content: (
         <div className="space-y-6">
           <p className="text-2xl font-semibold">
-            <strong className="text-blue-400">ORM</strong> (Object-Relational Mapping) + 
-            <strong className="text-purple-400"> Model</strong> = <strong>mapowanie tabel na klasy JavaScript</strong>!
+            <strong className="text-blue-400">Model</strong> to sposób na <strong>mapowanie tabeli w bazie danych 
+            na obiekty JavaScript</strong> w kodzie.
           </p>
 
-          <div className="bg-orange-500/20 rounded-xl p-6 border-2 border-orange-500/50">
-            <h3 className="text-2xl font-bold mb-4">🎯 Co to jest Model?</h3>
-            <div className="space-y-3">
-              <p className="text-lg">
-                <strong>Model</strong> to reprezentacja tabeli w bazie jako <strong>klasy/obiektu</strong> w kodzie.
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📊 Krok 1: Tabela w bazie danych</h3>
+            <p className="mb-3 text-base">
+              W bazie danych masz <strong>tabelę</strong> z danymi. Tabela to jak arkusz kalkulacyjny - 
+              ma wiersze (rekordy) i kolumny (pola):
+            </p>
+            <div className="bg-white/10 rounded p-4">
+              <p className="text-sm mb-2"><strong>Tabela "produkty" w bazie:</strong></p>
+              <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
+                <code className="text-white">{`┌────┬──────────┬─────────────┬──────┐
+│ id │ nazwa    │ opis        │ cena │
+├────┼──────────┼─────────────┼──────┤
+│ 1  │ Laptop   │ Super laptop│ 1000 │
+│ 2  │ Mysz     │ Bezprzewodowa│ 50  │
+│ 3  │ Klawiatura│ Mechaniczna│ 200 │
+└────┴──────────┴─────────────┴──────┘`}</code>
+              </pre>
+              <p className="text-xs mt-2 opacity-70">
+                To są dane w bazie - wiersze (1, 2, 3) i kolumny (id, nazwa, opis, cena)
               </p>
-              <div className="bg-white/10 rounded p-4">
-                <strong>Przykład:</strong>
-                <ul className="mt-2 space-y-2 text-sm">
-                  <li>• Tabela <code className="bg-black/30 px-2 py-1 rounded">produkty</code> w bazie</li>
-                  <li>• Model <code className="bg-black/30 px-2 py-1 rounded">Produkt</code> w kodzie</li>
-                  <li>• Każdy wiersz = instancja modelu</li>
-                  <li>• Kolumny = właściwości modelu</li>
-                </ul>
-              </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-red-500/20 rounded-xl p-5 border-2 border-red-500/50">
-              <h4 className="text-xl font-bold mb-3 text-red-300">❌ Bez ORM (czysty SQL)</h4>
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔄 Krok 2: Prisma mapuje tabelę na obiekty JavaScript</h3>
+            <p className="mb-3 text-base">
+              Prisma automatycznie <strong>zamienia wiersze z tabeli na obiekty JavaScript</strong>:
+            </p>
+            <div className="bg-white/10 rounded p-4">
+              <p className="text-sm mb-2"><strong>Każdy wiersz staje się obiektem:</strong></p>
               <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
-                <code className="text-white/70">{`const db = getDatabase();
-const rows = db.prepare(
-  'SELECT * FROM produkty WHERE cena > ? AND nazwa LIKE ?'
-).all(100, '%Laptop%');
+                <code className="text-green-400">{`// Wiersz 1 z tabeli → obiekt JavaScript
+const produkt1 = {
+  id: 1,
+  nazwa: "Laptop",
+  opis: "Super laptop",
+  cena: 1000
+};
 
-// Długie SQL queries
-// Brak type safety
-// Trudno refaktorować
-// Musisz pamiętać nazwy kolumn`}</code>
+// Wiersz 2 z tabeli → obiekt JavaScript
+const produkt2 = {
+  id: 2,
+  nazwa: "Mysz",
+  opis: "Bezprzewodowa",
+  cena: 50
+};
+
+// Wiersz 3 z tabeli → obiekt JavaScript
+const produkt3 = {
+  id: 3,
+  nazwa: "Klawiatura",
+  opis: "Mechaniczna",
+  cena: 200
+};`}</code>
               </pre>
-            </div>
-
-            <div className="bg-green-500/20 rounded-xl p-5 border-2 border-green-500/50">
-              <h4 className="text-xl font-bold mb-3 text-green-300">✅ Z Prisma (jak Laravel!)</h4>
-              <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
-                <code className="text-green-400">{`import { prisma } from '@/lib/prisma';
-
-// Krótkie, czytelne!
-const produkty = await prisma.produkt.findMany({
-  where: {
-    cena: { gt: 100 },
-    nazwa: { contains: 'Laptop' }
-  }
-});
-
-// TypeScript wie typ!
-// Autocomplete działa
-// Łatwo refaktorować`}</code>
-              </pre>
+              <p className="text-xs mt-2 opacity-70">
+                <strong>Mapowanie:</strong> Wiersz w tabeli = obiekt JavaScript. Kolumny = właściwości obiektu (id, nazwa, opis, cena)
+              </p>
             </div>
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🌉 Analogia: Tłumacz + Słownik</h4>
-            <div className="space-y-2 text-sm">
-              <p>
-                <strong>ORM</strong> = tłumacz który zamienia JavaScript na SQL
-              </p>
-              <p>
-                <strong>Model</strong> = słownik który definiuje strukturę (jak wygląda tabela)
-              </p>
-              <p className="mt-3 bg-white/10 rounded p-3">
-                <strong>Prisma</strong> = ORM + Modele w jednym! Masz <code className="bg-black/30 px-2 py-1 rounded">prisma.produkt</code> 
-                który reprezentuje tabelę <code className="bg-black/30 px-2 py-1 rounded">produkty</code>
+            <h3 className="text-2xl font-bold mb-4">🔍 Krok 3: Sprawdzanie właściwości (properties)</h3>
+            <p className="mb-3 text-base">
+              Gdy masz obiekt, możesz <strong>sprawdzać jego właściwości</strong> (properties):
+            </p>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-purple-400">{`// Pobierz produkt z bazy (Prisma automatycznie mapuje na obiekt)
+const produkt = await prisma.produkt.findUnique({
+  where: { id: 1 }
+});
+
+// Sprawdzaj właściwości obiektu:
+console.log(produkt.id);      // 1
+console.log(produkt.nazwa);  // "Laptop"
+console.log(produkt.opis);   // "Super laptop"
+console.log(produkt.cena);   // 1000
+
+// Możesz używać właściwości w kodzie:
+if (produkt.cena > 500) {
+  console.log("Drogi produkt!");
+}
+
+const pelnaNazwa = produkt.nazwa + " - " + produkt.cena + " zł";
+// "Laptop - 1000 zł"`}</code>
+            </pre>
+            <p className="text-sm mt-3 opacity-80">
+              <strong>Properties</strong> = właściwości obiektu. To są dane które możesz odczytać i używać w kodzie!
+            </p>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Podsumowanie mapowania:</strong>
+            <ul className="text-sm mt-2 space-y-1">
+              <li>• Tabela w bazie → Model w kodzie</li>
+              <li>• Wiersz w tabeli → Obiekt JavaScript</li>
+              <li>• Kolumna w tabeli → Właściwość obiektu (property)</li>
+              <li>• Sprawdzasz właściwości przez: <code className="bg-black/30 px-1 rounded">obiekt.wlasciwosc</code></li>
+            </ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'model-repository-pattern',
+      title: 'Wzorzec Repository - Prisma.produkt',
+      icon: '📦',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-blue-400">prisma.produkt</strong> to <strong>Repository</strong> - 
+            obiekt który ma metody do pracy z tabelą "produkty" w bazie.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📦 Co to jest Repository Pattern?</h3>
+            <p className="mb-3 text-base">
+              <strong>Repository</strong> to obiekt który <strong>ukrywa szczegóły bazy danych</strong> i daje 
+              proste metody do pracy z danymi.
+            </p>
+            <div className="bg-white/10 rounded p-4">
+              <p className="text-sm mb-2"><strong>prisma.produkt = Repository dla tabeli "produkty"</strong></p>
+              <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
+                <code className="text-green-400">{`// prisma.produkt to obiekt z metodami:
+prisma.produkt.findMany()    // Pobierz wszystkie produkty
+prisma.produkt.findUnique()  // Znajdź produkt po ID
+prisma.produkt.create()      // Dodaj nowy produkt
+prisma.produkt.update()      // Zaktualizuj produkt
+prisma.produkt.delete()      // Usuń produkt`}</code>
+              </pre>
+              <p className="text-xs mt-2 opacity-70">
+                <strong>Repository Pattern:</strong> Kod nie wie jak działa baza danych. Tylko używa metod 
+                (findMany, create, etc.) a Prisma sama wykonuje odpowiednie SQL queries!
               </p>
             </div>
           </div>
 
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">✅ Zalety Repository Pattern:</h3>
+            <div className="space-y-3 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <strong>1. Kod nie wie jaka to baza danych</strong>
+                <p className="text-xs mt-1 opacity-70">
+                  Twój kod używa <code className="bg-black/30 px-1 rounded">prisma.produkt.findMany()</code> 
+                  - nie wie czy to SQLite, PostgreSQL czy MySQL!
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>2. Łatwa zmiana bazy danych</strong>
+                <p className="text-xs mt-1 opacity-70">
+                  Chcesz zmienić z SQLite na PostgreSQL? Zmieniasz tylko config file - kod zostaje taki sam!
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>3. Proste metody zamiast SQL</strong>
+                <p className="text-xs mt-1 opacity-70">
+                  Zamiast pisać długie SQL queries, używasz prostych metod: 
+                  <code className="bg-black/30 px-1 rounded">findMany()</code>, <code className="bg-black/30 px-1 rounded">create()</code>
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>4. Type safety</strong>
+                <p className="text-xs mt-1 opacity-70">
+                  TypeScript wie jakie właściwości ma produkt. Autocomplete działa - nie pomylisz nazwy kolumny!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🌉 Analogia: Sklep z produktami</h4>
+            <div className="space-y-2 text-base">
+              <p>
+                Wyobraź sobie <strong>sklep z produktami</strong>:
+              </p>
+              <div className="bg-white/10 rounded p-4 text-sm">
+                <p className="mb-2"><strong>prisma.produkt</strong> = szafa z produktami (tabela w bazie)</p>
+                <p className="mb-2"><strong>findMany()</strong> = metoda "pokaż mi wszystkie produkty"</p>
+                <p className="mb-2"><strong>findUnique()</strong> = metoda "znajdź produkt o numerze 1"</p>
+                <p className="mb-2"><strong>create()</strong> = metoda "dodaj nowy produkt do szafy"</p>
+                <p className="mt-3">
+                  <strong>Repository Pattern:</strong> Nie musisz wiedzieć jak działa szafa (baza danych). 
+                  Tylko mówisz metodzie co chcesz, a ona sama to robi!
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Prisma = Laravel Eloquent dla TypeScript!</strong>
-            <p className="text-sm mt-2">
-              W Laravel masz <code className="bg-black/30 px-1 rounded">Produkt::all()</code>, 
-              w Prisma masz <code className="bg-black/30 px-1 rounded">prisma.produkt.findMany()</code> - 
-              to samo, tylko w TypeScript!
+            <strong>💡 Pamiętaj:</strong> <code className="bg-black/30 px-1 rounded">prisma.produkt</code> to Repository - 
+            obiekt z metodami do pracy z tabelą. Kod nie wie jak działa baza - tylko używa metod!
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'model-config-file',
+      title: 'Config File - Jak zmienić bazę danych?',
+      icon: '⚙️',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Dzięki <strong className="text-blue-400">config file</strong> możesz <strong>zmienić bazę danych 
+            bez zmiany kodu</strong>! To bardzo przydatne.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📋 Config File 1: schema.prisma</h3>
+            <p className="mb-3 text-base">
+              Plik <code className="bg-black/30 px-2 py-1 rounded">prisma/schema.prisma</code> definiuje 
+              <strong> jak wyglądają modele</strong> (jakie kolumny ma tabela):
             </p>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-green-400">{`// prisma/schema.prisma
+
+// Konfiguracja bazy danych
+datasource db {
+  provider = "sqlite"        // Typ bazy: sqlite, postgresql, mysql
+  url      = env("DATABASE_URL")  // URL do bazy (z pliku .env)
+}
+
+// MODEL - definicja tabeli "produkty"
+model Produkt {
+  id        Int      @id @default(autoincrement())
+  nazwa     String
+  opis      String?
+  cena      Float
+  utworzono DateTime @default(now())
+}
+
+// MODEL - definicja tabeli "zamowienia"
+model Zamowienie {
+  id         Int      @id @default(autoincrement())
+  produktId  Int
+  ilosc      Int
+  utworzono  DateTime @default(now())
+}`}</code>
+            </pre>
+            <p className="text-sm mt-3 opacity-80">
+              <strong>schema.prisma</strong> = definicja modeli. Mówi Prisma jak wyglądają tabele w bazie.
+            </p>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔑 Config File 2: .env (DATABASE_URL)</h3>
+            <p className="mb-3 text-base">
+              Plik <code className="bg-black/30 px-2 py-1 rounded">.env</code> zawiera <strong>URL do bazy danych</strong>:
+            </p>
+            <div className="space-y-3">
+              <div className="bg-white/10 rounded p-4">
+                <p className="text-sm mb-2"><strong>Dla SQLite (lokalna baza plikowa):</strong></p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-green-400">DATABASE_URL="file:./database.db"</code>
+                </pre>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <p className="text-sm mb-2"><strong>Dla PostgreSQL (serwer bazy danych):</strong></p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-green-400">DATABASE_URL="postgresql://user:password@localhost:5432/mydb"</code>
+                </pre>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <p className="text-sm mb-2"><strong>Dla MySQL:</strong></p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-green-400">DATABASE_URL="mysql://user:password@localhost:3306/mydb"</code>
+                </pre>
+              </div>
+            </div>
+            <p className="text-sm mt-3 opacity-80">
+              <strong>DATABASE_URL</strong> = adres bazy danych. Zmieniasz tylko ten URL, a kod zostaje taki sam!
+            </p>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🔄 Jak zmienić bazę danych?</h4>
+            <div className="space-y-3 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <strong>Krok 1:</strong> Zmień <code className="bg-black/30 px-1 rounded">provider</code> w schema.prisma
+                <p className="text-xs mt-1 opacity-70">Z "sqlite" na "postgresql" lub "mysql"</p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>Krok 2:</strong> Zmień <code className="bg-black/30 px-1 rounded">DATABASE_URL</code> w .env
+                <p className="text-xs mt-1 opacity-70">Podaj URL do nowej bazy danych</p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>Krok 3:</strong> Uruchom <code className="bg-black/30 px-1 rounded">npx prisma migrate dev</code>
+                <p className="text-xs mt-1 opacity-70">Prisma stworzy tabele w nowej bazie</p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>Gotowe!</strong> Kod zostaje taki sam - tylko zmieniłeś config files!
+                <p className="text-xs mt-1 opacity-70">Wszystkie metody (findMany, create, etc.) działają tak samo!</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 To jest siła Repository Pattern!</strong> Kod nie wie jaka to baza - tylko używa metod. 
+            Zmieniasz bazę przez config files, a kod zostaje taki sam!
           </div>
         </div>
       )

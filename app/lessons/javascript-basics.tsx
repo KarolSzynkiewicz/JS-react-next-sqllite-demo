@@ -457,93 +457,383 @@ console.log(osoba.przedstawSie());
     },
     {
       id: 'oop-basics',
-      title: 'Programowanie Obiektowe (OOP)',
+      title: 'Programowanie Obiektowe (OOP) - Po co to?',
       icon: '🏗️',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-blue-400">OOP</strong> to sposób organizowania kodu używając 
-            <strong> obiektów jako "szablonów"</strong>.
+            <strong className="text-blue-400">OOP</strong> (Programowanie Obiektowe) to sposób organizowania kodu, 
+            gdzie <strong>grupujesz powiązane dane i funkcje razem</strong> w obiekty.
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">🏭 Analogia: Fabryka Samochodów</h3>
-            <p className="mb-4">
-              <strong>Klasa</strong> to jak <strong>projekt/szablon</strong> samochodu.<br/>
-              <strong>Obiekt</strong> to konkretny samochód zbudowany według tego projektu.
+            <h3 className="text-2xl font-bold mb-4">🤔 Po co używać OOP?</h3>
+            <div className="space-y-3 text-base">
+              <p>
+                <strong>Problem:</strong> Bez OOP masz rozproszone dane i funkcje:
+              </p>
+              <pre className="bg-black/50 rounded p-3 text-sm">
+                <code className="text-red-400">{`// Wszystko rozproszone - trudno znaleźć co do czego należy!
+let produktNazwa = "Laptop";
+let produktCena = 1000;
+let produktOpis = "Super laptop";
+
+function obliczCeneZPodatkiem(cena) {
+  return cena * 1.23;
+}
+
+function wyswietlProdukt(nazwa, cena) {
+  console.log(nazwa + " - " + cena);
+}
+
+// Co się dzieje? Gdzie jest logika produktu?`}</code>
+              </pre>
+            </div>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">✅ Rozwiązanie: OOP - wszystko razem!</h3>
+            <p className="mb-3">
+              Z OOP grupujesz dane i funkcje w <strong>jeden obiekt</strong>:
             </p>
-            <div className="bg-white/10 rounded-lg p-4">
-              <pre className="text-sm">
-                <code className="text-green-400">{`// Klasa - szablon
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-green-400">{`// Wszystko w jednym miejscu - łatwo znaleźć!
+let produkt = {
+  nazwa: "Laptop",
+  cena: 1000,
+  opis: "Super laptop",
+  
+  // Metoda - funkcja w obiekcie
+  obliczCeneZPodatkiem: function() {
+    return this.cena * 1.23;
+  },
+  
+  // Metoda - wyświetl produkt
+  wyswietl: function() {
+    console.log(this.nazwa + " - " + this.cena);
+  }
+};
+
+// Użycie - wszystko w jednym miejscu!
+produkt.wyswietl();  // "Laptop - 1000"
+produkt.obliczCeneZPodatkiem();  // 1230`}</code>
+            </pre>
+            <p className="text-sm mt-3 opacity-80">
+              <strong>Zalety:</strong> Wszystko razem, łatwo znaleźć, łatwo zmienić, łatwo użyć!
+            </p>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">🏭 Analogia: Fabryka Samochodów</h3>
+            <div className="space-y-3 text-base">
+              <p>
+                Wyobraź sobie <strong>fabrykę samochodów</strong>:
+              </p>
+              <div className="bg-white/10 rounded p-4">
+                <p className="mb-2"><strong>Projekt samochodu</strong> (Klasa) = szablon, plan jak zbudować samochód</p>
+                <p className="mb-2"><strong>Konkretny samochód</strong> (Obiekt) = samochód zbudowany według projektu</p>
+                <p><strong>Metody samochodu</strong> = co samochód może robić (jedź, zatrzymaj się, otwórz bagażnik)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'oop-methods',
+      title: 'Co to są Metody?',
+      icon: '⚙️',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-blue-400">Metoda</strong> to <strong>funkcja wewnątrz obiektu</strong>. 
+            To sposób na wykonywanie akcji związanych z tym obiektem.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">🎯 Prosty przykład: Samochód</h3>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-green-400">{`// Obiekt samochód
+let samochod = {
+  // Właściwości (dane)
+  marka: "Toyota",
+  model: "Corolla",
+  predkosc: 0,
+  
+  // Metody (funkcje - co samochód może robić)
+  przyspiesz: function() {
+    this.predkosc += 10;
+    console.log("Prędkość: " + this.predkosc + " km/h");
+  },
+  
+  zatrzymaj: function() {
+    this.predkosc = 0;
+    console.log("Zatrzymano!");
+  },
+  
+  wyswietlInfo: function() {
+    console.log(this.marka + " " + this.model);
+  }
+};
+
+// Użycie metod
+samochod.przyspiesz();  // Prędkość: 10 km/h
+samochod.przyspiesz();  // Prędkość: 20 km/h
+samochod.wyswietlInfo();  // Toyota Corolla`}</code>
+            </pre>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">📝 Wyjaśnienie linia po linii:</h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">przyspiesz: function() { ... }</code>
+                <p className="text-xs mt-1 opacity-70">To jest metoda - funkcja wewnątrz obiektu</p>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">this.predkosc</code>
+                <p className="text-xs mt-1 opacity-70">"this" = ten obiekt (ten samochód). this.predkosc = prędkość tego samochodu</p>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">samochod.przyspiesz()</code>
+                <p className="text-xs mt-1 opacity-70">Wywołanie metody - mówisz samochodowi "przyspiesz!"</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Pamiętaj:</strong> Metoda to funkcja w obiekcie. Używasz jej przez: <code className="bg-black/30 px-2 py-1 rounded">obiekt.metoda()</code>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'oop-classes',
+      title: 'Klasy - Szablony Obiektów',
+      icon: '📋',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-blue-400">Klasa</strong> to <strong>szablon do tworzenia obiektów</strong>. 
+            Zamiast tworzyć każdy obiekt osobno, tworzysz klasę i potem wiele obiektów z niej.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">🏭 Przykład: Klasa Samochod</h3>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-green-400">{`// Klasa - szablon (jak projekt samochodu)
 class Samochod {
+  // constructor = funkcja która tworzy obiekt
   constructor(marka, model) {
     this.marka = marka;      // Właściwość
     this.model = model;
     this.predkosc = 0;
   }
   
-  // Metoda
+  // Metoda - co samochód może robić
   przyspiesz() {
     this.predkosc += 10;
     console.log("Prędkość: " + this.predkosc + " km/h");
   }
+  
+  zatrzymaj() {
+    this.predkosc = 0;
+    console.log("Zatrzymano!");
+  }
 }
 
-// Tworzenie obiektów (instancji)
+// Tworzenie obiektów z klasy (instancje)
 let auto1 = new Samochod("Toyota", "Corolla");
 let auto2 = new Samochod("BMW", "X5");
 
-auto1.przyspiesz();  // Prędkość: 10 km/h
-auto2.przyspiesz();  // Prędkość: 10 km/h`}</code>
-              </pre>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-purple-500/20 rounded-xl p-5 border-l-4 border-purple-500">
-              <h4 className="text-lg font-bold mb-2 text-purple-400">🧱 Enkapsulacja</h4>
-              <p className="text-sm">
-                Grupowanie powiązanych danych i funkcji w jeden obiekt
-              </p>
-            </div>
-            <div className="bg-green-500/20 rounded-xl p-5 border-l-4 border-green-500">
-              <h4 className="text-lg font-bold mb-2 text-green-400">🔄 Dziedziczenie</h4>
-              <p className="text-sm">
-                Nowa klasa może "odziedziczyć" właściwości z innej klasy
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-green-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🌳 Przykład dziedziczenia</h4>
-            <pre className="bg-black/50 rounded p-4 text-sm">
-              <code className="text-green-400">{`// Klasa bazowa
-class Zwierze {
-  constructor(imie) {
-    this.imie = imie;
-  }
-  
-  jedz() {
-    console.log(this.imie + " je");
-  }
-}
-
-// Klasa pochodna (dziedziczy po Zwierze)
-class Pies extends Zwierze {
-  szczekaj() {
-    console.log(this.imie + " szczeka: Hau!");
-  }
-}
-
-let burek = new Pies("Burek");
-burek.jedz();       // "Burek je" (z klasy Zwierze)
-burek.szczekaj();   // "Burek szczeka: Hau!" (z klasy Pies)`}</code>
+// Każdy samochód działa niezależnie!
+auto1.przyspiesz();  // Prędkość: 10 km/h (Toyota)
+auto2.przyspiesz();  // Prędkość: 10 km/h (BMW)
+auto1.przyspiesz();  // Prędkość: 20 km/h (Toyota)`}</code>
             </pre>
           </div>
 
-          <div className="bg-orange-500/20 rounded-xl p-4 border border-orange-500/50">
+          <div className="bg-green-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">📝 Wyjaśnienie:</h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">class Samochod { ... }</code>
+                <p className="text-xs mt-1 opacity-70">Definicja klasy - szablon samochodu</p>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">constructor(marka, model)</code>
+                <p className="text-xs mt-1 opacity-70">Funkcja która tworzy obiekt. Ustawia właściwości (marka, model)</p>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">new Samochod("Toyota", "Corolla")</code>
+                <p className="text-xs mt-1 opacity-70">Tworzy nowy obiekt z klasy. "new" = stwórz nowy obiekt</p>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <code className="text-green-400">auto1.przyspiesz()</code>
+                <p className="text-xs mt-1 opacity-70">Wywołanie metody - każdy samochód ma swoje metody</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-4">
+            <strong>💡 Zalety klas:</strong> Możesz stworzyć wiele obiektów z jednego szablonu. 
+            Każdy obiekt działa niezależnie, ale ma te same metody!
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'oop-methods-database',
+      title: 'Metody mogą pobierać dane z bazy!',
+      icon: '💾',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-blue-400">Metody mogą robić wszystko</strong> - także pobierać dane z bazy danych! 
+            To bardzo przydatne w praktyce.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">💾 Przykład: Model Produkt z bazą danych</h3>
+            <p className="mb-3">
+              Wyobraź sobie, że masz <strong>model Produkt</strong> który reprezentuje produkty w bazie danych:
+            </p>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-green-400">{`// Model Produkt (używając Prisma ORM)
+import { prisma } from '@/lib/prisma';
+
+// Obiekt prisma.produkt ma metody do pracy z bazą!
+const produkty = await prisma.produkt.findMany();
+// findMany() = metoda która pobiera wszystkie produkty z bazy
+
+const produkt = await prisma.produkt.findUnique({
+  where: { id: 1 }
+});
+// findUnique() = metoda która znajduje produkt po ID
+
+const nowyProdukt = await prisma.produkt.create({
+  data: {
+    nazwa: "Laptop",
+    cena: 1000
+  }
+});
+// create() = metoda która dodaje nowy produkt do bazy`}</code>
+            </pre>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 Co się tutaj dzieje?</h4>
+            <div className="space-y-3 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <p><strong>prisma.produkt</strong> = obiekt reprezentujący tabelę "produkty" w bazie</p>
+                <p className="text-xs mt-1 opacity-70">To jest jak "szablon" produktu - ma metody do pracy z bazą</p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <p><strong>findMany()</strong> = metoda która mówi bazie: "daj mi wszystkie produkty"</p>
+                <p className="text-xs mt-1 opacity-70">Metoda wykonuje SQL query i zwraca dane jako obiekty JavaScript</p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <p><strong>findUnique()</strong> = metoda która mówi bazie: "znajdź produkt o ID = 1"</p>
+                <p className="text-xs mt-1 opacity-70">Metoda wykonuje SQL query i zwraca jeden produkt</p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <p><strong>create()</strong> = metoda która mówi bazie: "dodaj nowy produkt"</p>
+                <p className="text-xs mt-1 opacity-70">Metoda wykonuje SQL INSERT i dodaje dane do bazy</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🌉 Analogia: Sklep z produktami</h4>
+            <div className="space-y-2 text-base">
+              <p>
+                Wyobraź sobie <strong>sklep z produktami</strong>:
+              </p>
+              <div className="bg-white/10 rounded p-4 text-sm">
+                <p className="mb-2"><strong>prisma.produkt</strong> = szafa z produktami (tabela w bazie)</p>
+                <p className="mb-2"><strong>findMany()</strong> = metoda "pokaż mi wszystkie produkty"</p>
+                <p className="mb-2"><strong>findUnique()</strong> = metoda "znajdź produkt o numerze 1"</p>
+                <p><strong>create()</strong> = metoda "dodaj nowy produkt do szafy"</p>
+              </div>
+              <p className="mt-3">
+                <strong>Metody to jak "prośby" do bazy danych!</strong> Mówisz metodzie co chcesz, 
+                a ona wykonuje odpowiednie SQL query i zwraca dane.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Ważne:</strong> Metody mogą robić wszystko - obliczać, wyświetlać, pobierać dane z bazy, 
+            wysyłać requesty do API. To bardzo potężne narzędzie!
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'oop-why-useful',
+      title: 'Dlaczego OOP jest przydatne?',
+      icon: '⭐',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-blue-400">OOP</strong> pomaga organizować kod i sprawia, że jest 
+            <strong> łatwiejszy do zrozumienia i zmiany</strong>.
+          </p>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">✅ Zalety OOP:</h3>
+            <div className="space-y-4 text-base">
+              <div className="bg-white/10 rounded p-4">
+                <strong>1. Wszystko razem</strong>
+                <p className="text-sm mt-2 opacity-80">
+                  Dane i funkcje są w jednym miejscu. Jeśli chcesz zmienić coś związanego z produktem, 
+                  wszystko jest w jednym obiekcie - łatwo znaleźć!
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <strong>2. Reużywalność</strong>
+                <p className="text-sm mt-2 opacity-80">
+                  Możesz stworzyć wiele obiektów z jednej klasy. Nie musisz pisać tego samego kodu 
+                  wiele razy - stwórz klasę i użyj jej wiele razy!
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <strong>3. Czytelność</strong>
+                <p className="text-sm mt-2 opacity-80">
+                  Kod jest bardziej zrozumiały. <code className="bg-black/30 px-1 rounded">produkt.znajdz()</code> 
+                  jest czytelniejsze niż <code className="bg-black/30 px-1 rounded">znajdzProdukt(produktId)</code>
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <strong>4. Łatwość zmiany</strong>
+                <p className="text-sm mt-2 opacity-80">
+                  Jeśli chcesz zmienić jak działa produkt, zmieniasz tylko klasę Produkt. 
+                  Wszystkie obiekty automatycznie dostaną zmiany!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 Przykład z życia: Aplikacja sklepu</h4>
+            <div className="space-y-3 text-sm">
+              <p>
+                W aplikacji sklepu masz:
+              </p>
+              <ul className="space-y-2 ml-4">
+                <li>• <strong>Klasa Produkt</strong> - metody: znajdz(), dodaj(), usun(), zaktualizuj()</li>
+                <li>• <strong>Klasa Koszyk</strong> - metody: dodajProdukt(), obliczCene(), wyczysc()</li>
+                <li>• <strong>Klasa Zamowienie</strong> - metody: utworz(), wyslij(), anuluj()</li>
+              </ul>
+              <p className="mt-3">
+                Każda klasa ma swoje dane i metody. Wszystko jest zorganizowane i łatwe do znalezienia!
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-4">
             <strong>💡 OOP w React:</strong> React używa OOP! Komponenty to klasy lub funkcje, 
-            które tworzą "instancje" elementów UI 🎨
+            które tworzą "instancje" elementów UI. Każdy komponent ma swoje dane (state) i metody (funkcje) 🎨
           </div>
         </div>
       )
