@@ -61,15 +61,15 @@ export default function NoteList({ notes, onDeleteNote, onLog, onStepChange }: N
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+    <div className="bg-white/10 backdrop-blur-lg dark:bg-gray-800/50 rounded-2xl shadow-lg p-6 border border-white/20 dark:border-gray-700">
+      <h3 className="text-xl font-semibold text-white dark:text-white mb-4">
         📝 Lista notatek ({notes.length}) - React State + SQLite
       </h3>
       <div className="space-y-3">
         {notes.map((note) => (
           <div
             key={note.id}
-            className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-all duration-200"
+            className="p-4 bg-white/5 dark:bg-gray-700/50 rounded-lg border border-white/10 dark:border-gray-600 hover:shadow-md hover:bg-white/10 transition-all duration-200 animate-fadeIn"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
