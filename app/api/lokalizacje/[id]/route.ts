@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@/lib/db';
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const db = getDatabase();
-  const id = parseInt(params.id);
+  const id = parseInt(idParam);
   const body = await request.json();
   
   const updates: string[] = [];
@@ -22,9 +23,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   return NextResponse.json({ success: true, data: zaktualizowany });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: idParam } = await params;
   const db = getDatabase();
-  const id = parseInt(params.id);
+  const id = parseInt(idParam);
   db.prepare('DELETE FROM lokalizacje WHERE id = ?').run(id);
   return NextResponse.json({ success: true, deletedId: id });
 }

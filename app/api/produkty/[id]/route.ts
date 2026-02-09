@@ -23,11 +23,12 @@ import { getDatabase } from '@/lib/db';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: idParam } = await params;
     const db = getDatabase();
-    const id = parseInt(params.id, 10);
+    const id = parseInt(idParam, 10);
     
     // Walidacja ID
     if (isNaN(id) || id <= 0) {
@@ -79,11 +80,12 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: idParam } = await params;
     const db = getDatabase();
-    const id = parseInt(params.id, 10);
+    const id = parseInt(idParam, 10);
     
     // Walidacja ID
     if (isNaN(id) || id <= 0) {
@@ -172,11 +174,12 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: idParam } = await params;
     const db = getDatabase();
-    const id = parseInt(params.id, 10);
+    const id = parseInt(idParam, 10);
     
     // Walidacja ID
     if (isNaN(id) || id <= 0) {
