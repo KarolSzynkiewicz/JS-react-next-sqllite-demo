@@ -286,7 +286,7 @@ export default function Weather({ city }: { city: string }) {
             <h4 className="text-lg font-bold mb-3">📝 Wyjaśnienie linia po linii:</h4>
             <div className="space-y-2 text-sm">
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">useEffect(() => { ... }, [city])</code>
+                <code className="text-green-400">{'useEffect(() => { ... }, [city])'}</code>
                 <p className="text-xs mt-1 opacity-70">Uruchamia się gdy komponent się montuje lub zmienia się city</p>
               </div>
               <div className="bg-white/10 rounded p-2">

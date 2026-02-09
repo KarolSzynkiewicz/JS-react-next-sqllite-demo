@@ -582,7 +582,7 @@ await prisma.produkt.delete({
             <ul className="text-sm mt-2 space-y-1">
               <li>• Laravel: <code className="bg-black/30 px-1 rounded">all()</code> → Prisma: <code className="bg-black/30 px-1 rounded">findMany()</code></li>
               <li>• Laravel: <code className="bg-black/30 px-1 rounded">find(1)</code> → Prisma: <code className="bg-black/30 px-1 rounded">{'findUnique({where: {id: 1}})'}</code></li>
-              <li>• Laravel: <code className="bg-black/30 px-1 rounded">where('cena', '>', 100)</code> → Prisma: <code className="bg-black/30 px-1 rounded">{'where: {cena: {gt: 100}}'}</code></li>
+              <li>• Laravel: <code className="bg-black/30 px-1 rounded">{'where(\'cena\', \'>\', 100)'}</code> → Prisma: <code className="bg-black/30 px-1 rounded">{'where: {cena: {gt: 100}}'}</code></li>
             </ul>
           </div>
         </div>
