@@ -2,34 +2,34 @@ import { Lesson } from '../components/LessonSlider';
 
 export const ormBasicsLesson: Lesson = {
   id: 'orm-basics',
-  title: 'ORM - Object-Relational Mapping',
-  description: 'Mapowanie obiektów na bazę danych',
+  title: 'Prisma ORM - Modele jak w Laravel',
+  description: 'ORM z modelami i prostym API',
   icon: '🗺️',
   slides: [
     {
-      id: 'what-is-orm',
-      title: 'Co to jest ORM?',
+      id: 'what-is-orm-model',
+      title: 'Co to jest ORM i Model?',
       icon: '🗺️',
       content: (
         <div className="space-y-6">
           <p className="text-2xl font-semibold">
-            <strong className="text-blue-400">ORM</strong> (Object-Relational Mapping) to narzędzie, 
-            które <strong>mapuje obiekty JavaScript na tabele w bazie danych</strong>!
+            <strong className="text-blue-400">ORM</strong> (Object-Relational Mapping) + 
+            <strong className="text-purple-400"> Model</strong> = <strong>mapowanie tabel na klasy JavaScript</strong>!
           </p>
 
           <div className="bg-orange-500/20 rounded-xl p-6 border-2 border-orange-500/50">
-            <h3 className="text-2xl font-bold mb-4">🌉 Analogia: Tłumacz</h3>
+            <h3 className="text-2xl font-bold mb-4">🎯 Co to jest Model?</h3>
             <div className="space-y-3">
               <p className="text-lg">
-                Wyobraź sobie, że mówisz po polsku, a baza danych rozumie tylko SQL. 
-                ORM to jak tłumacz który:
+                <strong>Model</strong> to reprezentacja tabeli w bazie jako <strong>klasy/obiektu</strong> w kodzie.
               </p>
               <div className="bg-white/10 rounded p-4">
-                <ul className="space-y-2">
-                  <li>✓ <strong>Rozumie JavaScript</strong> - piszesz kod w JS/TS</li>
-                  <li>✓ <strong>Tłumaczy na SQL</strong> - ORM generuje SQL za Ciebie</li>
-                  <li>✓ <strong>Mapuje wyniki</strong> - SQL results → JavaScript objects</li>
-                  <li>✓ <strong>Type-safe</strong> - TypeScript wie jakie pola masz</li>
+                <strong>Przykład:</strong>
+                <ul className="mt-2 space-y-2 text-sm">
+                  <li>• Tabela <code className="bg-black/30 px-2 py-1 rounded">produkty</code> w bazie</li>
+                  <li>• Model <code className="bg-black/30 px-2 py-1 rounded">Produkt</code> w kodzie</li>
+                  <li>• Każdy wiersz = instancja modelu</li>
+                  <li>• Kolumny = właściwości modelu</li>
                 </ul>
               </div>
             </div>
@@ -41,170 +41,112 @@ export const ormBasicsLesson: Lesson = {
               <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
                 <code className="text-white/70">{`const db = getDatabase();
 const rows = db.prepare(
-  'SELECT * FROM produkty WHERE cena > ?'
-).all(100);
+  'SELECT * FROM produkty WHERE cena > ? AND nazwa LIKE ?'
+).all(100, '%Laptop%');
 
-// rows to surowe dane z bazy
-// Nie masz type safety
-// Musisz pamiętać nazwy kolumn
-// Trudno refaktorować`}</code>
+// Długie SQL queries
+// Brak type safety
+// Trudno refaktorować
+// Musisz pamiętać nazwy kolumn`}</code>
               </pre>
             </div>
 
             <div className="bg-green-500/20 rounded-xl p-5 border-2 border-green-500/50">
-              <h4 className="text-xl font-bold mb-3 text-green-300">✅ Z ORM (Drizzle)</h4>
+              <h4 className="text-xl font-bold mb-3 text-green-300">✅ Z Prisma (jak Laravel!)</h4>
               <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
-                <code className="text-green-400">{`import { db, produkty } from '@/lib/db';
-import { gt } from 'drizzle-orm';
+                <code className="text-green-400">{`import { prisma } from '@/lib/prisma';
 
-const results = await db
-  .select()
-  .from(produkty)
-  .where(gt(produkty.cena, 100));
+// Krótkie, czytelne!
+const produkty = await prisma.produkt.findMany({
+  where: {
+    cena: { gt: 100 },
+    nazwa: { contains: 'Laptop' }
+  }
+});
 
 // TypeScript wie typ!
 // Autocomplete działa
-// Łatwo refaktorować
-// Czytelny kod`}</code>
+// Łatwo refaktorować`}</code>
               </pre>
             </div>
           </div>
 
-          <div className="bg-purple-500/20 rounded-xl p-4 text-center">
-            <p className="text-lg">
-              <strong>💡 ORM = Mniej SQL, więcej JavaScript!</strong> 
-              Pisz kod w języku który znasz, ORM zajmie się bazą.
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🌉 Analogia: Tłumacz + Słownik</h4>
+            <div className="space-y-2 text-sm">
+              <p>
+                <strong>ORM</strong> = tłumacz który zamienia JavaScript na SQL
+              </p>
+              <p>
+                <strong>Model</strong> = słownik który definiuje strukturę (jak wygląda tabela)
+              </p>
+              <p className="mt-3 bg-white/10 rounded p-3">
+                <strong>Prisma</strong> = ORM + Modele w jednym! Masz <code className="bg-black/30 px-2 py-1 rounded">prisma.produkt</code> 
+                który reprezentuje tabelę <code className="bg-black/30 px-2 py-1 rounded">produkty</code>
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Prisma = Laravel Eloquent dla TypeScript!</strong>
+            <p className="text-sm mt-2">
+              W Laravel masz <code className="bg-black/30 px-1 rounded">Produkt::all()</code>, 
+              w Prisma masz <code className="bg-black/30 px-1 rounded">prisma.produkt.findMany()</code> - 
+              to samo, tylko w TypeScript!
             </p>
           </div>
         </div>
       )
     },
     {
-      id: 'how-orm-works',
-      title: 'Jak działa ORM?',
-      icon: '⚙️',
+      id: 'why-prisma',
+      title: 'Dlaczego Prisma?',
+      icon: '⭐',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            ORM działa w <strong className="text-blue-400">3 warstwach</strong>:
+            <strong className="text-blue-400">Prisma</strong> to najpopularniejszy ORM dla TypeScript. 
+            Ma <strong>modele jak Laravel</strong> i <strong>proste API</strong>!
           </p>
 
           <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-6 border-2 border-blue-500/50">
-            <h3 className="text-2xl font-bold mb-6 text-center">🔄 ORM Flow</h3>
-            <div className="space-y-4">
-              <div className="bg-white/10 rounded-xl p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-4xl">1️⃣</span>
-                  <h4 className="text-xl font-bold text-blue-400">Schema Definition</h4>
-                </div>
-                <p className="text-sm mb-2">Definiujesz strukturę tabeli jako TypeScript object:</p>
-                <pre className="bg-black/50 rounded p-3 text-xs">
-                  <code className="text-blue-400">{`const produkty = sqliteTable('produkty', {
-  id: integer('id').primaryKey(),
-  nazwa: text('nazwa').notNull(),
-  cena: real('cena').notNull(),
-});`}</code>
-                </pre>
-                <p className="text-xs mt-2 opacity-70">ORM wie jak wygląda tabela!</p>
-              </div>
-
-              <div className="text-center text-3xl">⬇️</div>
-
-              <div className="bg-white/10 rounded-xl p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-4xl">2️⃣</span>
-                  <h4 className="text-xl font-bold text-purple-400">Query Builder</h4>
-                </div>
-                <p className="text-sm mb-2">Piszesz zapytania w JavaScript:</p>
-                <pre className="bg-black/50 rounded p-3 text-xs">
-                  <code className="text-purple-400">{`db.select()
-  .from(produkty)
-  .where(gt(produkty.cena, 100));`}</code>
-                </pre>
-                <p className="text-xs mt-2 opacity-70">ORM tłumaczy to na SQL!</p>
-              </div>
-
-              <div className="text-center text-3xl">⬇️</div>
-
-              <div className="bg-white/10 rounded-xl p-5">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-4xl">3️⃣</span>
-                  <h4 className="text-xl font-bold text-green-400">SQL Execution</h4>
-                </div>
-                <p className="text-sm mb-2">ORM wykonuje SQL i zwraca typowane obiekty:</p>
-                <pre className="bg-black/50 rounded p-3 text-xs">
-                  <code className="text-green-400">{`// ORM generuje:
-SELECT * FROM produkty WHERE cena > 100
-
-// Zwraca:
-[{ id: 1, nazwa: 'Laptop', cena: 2999 }]
-// TypeScript wie typ każdego pola!`}</code>
-                </pre>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-yellow-500/20 rounded-xl p-5">
-            <h4 className="text-lg font-bold mb-3">🎯 Zalety ORM</h4>
-            <ul className="space-y-2 text-sm">
-              <li>✓ <strong>Type Safety</strong> - TypeScript wie co zwraca</li>
-              <li>✓ <strong>Autocomplete</strong> - IDE podpowiada pola</li>
-              <li>✓ <strong>Mniej błędów</strong> - literówki w nazwach kolumn = błąd kompilacji</li>
-              <li>✓ <strong>Łatwiejsze migracje</strong> - zmiana schema = zmiana kodu</li>
-              <li>✓ <strong>Database agnostic</strong> - łatwo zmienić bazę (SQLite → PostgreSQL)</li>
-            </ul>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'drizzle-orm',
-      title: 'Drizzle ORM - Najlepszy dla SQLite',
-      icon: '❄️',
-      content: (
-        <div className="space-y-6">
-          <p className="text-xl">
-            <strong className="text-cyan-400">Drizzle ORM</strong> to nowoczesny, lekki ORM 
-            idealny dla <strong>SQLite + TypeScript + Next.js</strong>!
-          </p>
-
-          <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-xl p-6 border-2 border-cyan-500/50">
             <div className="flex items-center gap-4 mb-4">
-              <span className="text-6xl">❄️</span>
+              <span className="text-6xl">⭐</span>
               <div>
-                <h3 className="text-3xl font-bold">Drizzle ORM</h3>
-                <p className="opacity-80">TypeScript ORM with zero runtime overhead</p>
+                <h3 className="text-3xl font-bold">Prisma ORM</h3>
+                <p className="opacity-80">Next-generation ORM for TypeScript</p>
               </div>
             </div>
             <div className="grid md:grid-cols-3 gap-3 text-sm">
               <div className="bg-white/10 rounded p-3 text-center">
-                <div className="text-2xl mb-1">⚡</div>
-                <strong>Zero runtime</strong>
-                <p className="text-xs opacity-70 mt-1">Tylko TypeScript types</p>
+                <div className="text-2xl mb-1">📋</div>
+                <strong>Modele</strong>
+                <p className="text-xs opacity-70 mt-1">Dedykowane pliki .prisma</p>
               </div>
               <div className="bg-white/10 rounded p-3 text-center">
                 <div className="text-2xl mb-1">🎯</div>
-                <strong>Type-safe</strong>
-                <p className="text-xs opacity-70 mt-1">Full TypeScript</p>
+                <strong>Laravel-like API</strong>
+                <p className="text-xs opacity-70 mt-1">findMany(), findUnique()</p>
               </div>
               <div className="bg-white/10 rounded p-3 text-center">
-                <div className="text-2xl mb-1">🪶</div>
-                <strong>Lekki</strong>
-                <p className="text-xs opacity-70 mt-1">~15KB</p>
+                <div className="text-2xl mb-1">🔗</div>
+                <strong>Relacje</strong>
+                <p className="text-xs opacity-70 mt-1">hasMany, belongsTo</p>
               </div>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-green-500/20 rounded-xl p-5 border-l-4 border-green-500">
-              <h4 className="text-lg font-bold mb-2 text-green-400">✅ Zalety Drizzle</h4>
+              <h4 className="text-lg font-bold mb-2 text-green-400">✅ Zalety Prisma</h4>
               <ul className="text-sm space-y-1">
+                <li>• Modele w plikach .prisma (jak Laravel!)</li>
+                <li>• API identyczne jak Laravel Eloquent</li>
+                <li>• Type-safe (TypeScript)</li>
+                <li>• Automatyczne migracje</li>
+                <li>• Relacje (hasMany, belongsTo)</li>
+                <li>• Prisma Studio (GUI do bazy)</li>
                 <li>• Świetne wsparcie SQLite</li>
-                <li>• Type-safe queries</li>
-                <li>• Zero runtime overhead</li>
-                <li>• Migracje wbudowane</li>
-                <li>• Aktywna społeczność</li>
-                <li>• Dobra dokumentacja</li>
               </ul>
             </div>
 
@@ -220,511 +162,992 @@ SELECT * FROM produkty WHERE cena > 100
           </div>
 
           <div className="bg-blue-500/20 rounded-xl p-4">
-            <strong>🌟 Popularność:</strong> Drizzle to najszybciej rosnący ORM w ekosystemie TypeScript! 
-            Używany przez Vercel, Supabase, i wiele startupów.
+            <strong>🌟 Popularność:</strong> Prisma jest używana przez tysiące firm (GitHub, Netflix, 
+            Notion, Figma). To standard w TypeScript ecosystem!
           </div>
         </div>
       )
     },
     {
       id: 'installation',
-      title: 'Instalacja Drizzle ORM',
+      title: 'Instalacja Prisma',
       icon: '📦',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Instalacja Drizzle to <strong className="text-green-400">3 proste kroki</strong>!
+            Instalacja Prisma to <strong className="text-green-400">3 proste kroki</strong>!
           </p>
 
           <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
             <h3 className="text-2xl font-bold mb-4">📥 Krok 1: Zainstaluj paczki</h3>
             <pre className="bg-black/50 rounded p-4 text-sm">
-              <code className="text-green-400">{`# Drizzle ORM + SQLite driver
-npm install drizzle-orm better-sqlite3
+              <code className="text-green-400">{`# Prisma ORM + SQLite driver
+npm install @prisma/client
 
-# Drizzle Kit (narzędzia CLI - migracje, studio)
-npm install -D drizzle-kit
-
-# TypeScript types dla better-sqlite3
-npm install -D @types/better-sqlite3`}</code>
+# Prisma CLI (narzędzia - migracje, studio)
+npm install -D prisma`}</code>
             </pre>
             <p className="text-sm mt-3 opacity-80">
-              <strong>drizzle-orm</strong> - główna biblioteka<br/>
-              <strong>drizzle-kit</strong> - narzędzia deweloperskie (migracje, studio)
+              <strong>@prisma/client</strong> - główna biblioteka (runtime)<br/>
+              <strong>prisma</strong> - narzędzia CLI (development)
             </p>
           </div>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">⚙️ Krok 2: Konfiguracja (drizzle.config.ts)</h3>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-blue-400">{`import { defineConfig } from 'drizzle-kit';
-
-export default defineConfig({
-  schema: './lib/schema.ts',    // Gdzie są definicje tabel
-  out: './drizzle',              // Gdzie zapisać migracje
-  dialect: 'sqlite',             // Typ bazy danych
-  dbCredentials: {
-    url: './database.db',        // Ścieżka do pliku SQLite
-  },
-});`}</code>
+            <h3 className="text-2xl font-bold mb-4">⚙️ Krok 2: Inicjalizacja</h3>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-blue-400">{`# Stwórz folder prisma/ i schema.prisma
+npx prisma init --datasource-provider sqlite`}</code>
             </pre>
+            <p className="text-sm mt-3 opacity-80">
+              To stworzy folder <code className="bg-black/30 px-2 py-1 rounded">prisma/</code> 
+              z plikiem <code className="bg-black/30 px-2 py-1 rounded">schema.prisma</code>!
+            </p>
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">✅ Krok 3: Sprawdź instalację</h3>
+            <h3 className="text-2xl font-bold mb-4">✅ Krok 3: Wygeneruj klienta</h3>
             <pre className="bg-black/50 rounded p-3 text-sm">
-              <code className="text-purple-400">{`# Sprawdź czy działa
-npx drizzle-kit --version
+              <code className="text-purple-400">{`# Po zdefiniowaniu modeli w schema.prisma
+npx prisma generate
 
-# Wygeneruj migracje (gdy masz schema)
-npx drizzle-kit generate
-
-# Uruchom migracje
-npx drizzle-kit migrate`}</code>
+# Uruchom migracje (stworzy tabele w bazie)
+npx prisma migrate dev --name init`}</code>
             </pre>
+            <p className="text-sm mt-3">
+              <code className="bg-black/30 px-2 py-1 rounded">prisma generate</code> tworzy TypeScript 
+              typy z modeli!
+            </p>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Tip:</strong> Drizzle Kit to opcjonalne narzędzie. Możesz używać Drizzle ORM 
-            bez niego, ale migracje będą ręczne.
+            <strong>💡 Tip:</strong> Po każdej zmianie w <code className="bg-black/30 px-2 py-1 rounded">schema.prisma</code> 
+            uruchom <code className="bg-black/30 px-2 py-1 rounded">npx prisma generate</code>!
           </div>
         </div>
       )
     },
     {
-      id: 'schema-definition',
-      title: 'Definiowanie Schema',
+      id: 'models-schema',
+      title: 'Modele - Definiowanie w schema.prisma',
       icon: '📋',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-blue-400">Schema</strong> to definicja tabel jako TypeScript objects. 
-            To serce Drizzle!
+            <strong className="text-blue-400">Modele</strong> definiujesz w pliku 
+            <code className="bg-black/30 px-2 py-1 rounded">prisma/schema.prisma</code>. 
+            To jak <strong>migracje w Laravel</strong>!
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">📋 Przykład: lib/schema.ts</h3>
+            <h3 className="text-2xl font-bold mb-4">📋 Przykład: prisma/schema.prisma</h3>
             <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`import { sqliteTable, text, real, integer } from 'drizzle-orm/sqlite-core';
+              <code className="text-green-400">{`// Konfiguracja bazy danych
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database.db"
+}
 
-// Definicja tabeli "produkty"
-export const produkty = sqliteTable('produkty', {
-  id: integer('id').primaryKey(),
-  nazwa: text('nazwa').notNull(),
-  opis: text('opis'),
-  cena: real('cena').notNull(),
-  utworzono: text('utworzono').default('CURRENT_TIMESTAMP'),
-});
+generator client {
+  provider = "prisma-client-js"
+}
 
-// Definicja tabeli "lokalizacje"
-export const lokalizacje = sqliteTable('lokalizacje', {
-  id: integer('id').primaryKey(),
-  miasto: text('miasto').notNull(),
-  kraj: text('kraj').notNull(),
-  region: text('region'),
-  utworzono: text('utworzono').default('CURRENT_TIMESTAMP'),
-});
+// MODEL - reprezentuje tabelę "produkty"
+model Produkt {
+  id        Int      @id @default(autoincrement())
+  nazwa     String
+  opis      String?
+  cena      Float
+  utworzono DateTime @default(now())
+  
+  // Relacja: jeden produkt ma wiele zamówień
+  zamowienia Zamowienie[]
+}
 
-// TypeScript automatycznie wywnioskuje typy!
-export type Produkt = typeof produkty.$inferSelect;  // Typ do odczytu
-export type NewProdukt = typeof produkty.$inferInsert; // Typ do wstawienia`}</code>
+// MODEL - reprezentuje tabelę "zamowienia"
+model Zamowienie {
+  id         Int      @id @default(autoincrement())
+  produktId  Int
+  ilosc      Int
+  utworzono  DateTime @default(now())
+  
+  // Relacja: zamówienie należy do produktu
+  produkt    Produkt  @relation(fields: [produktId], references: [id])
+}`}</code>
             </pre>
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🎯 Typy kolumn w SQLite</h4>
+            <h4 className="text-xl font-bold mb-3">🎯 Typy pól w Prisma</h4>
             <div className="grid md:grid-cols-2 gap-3 text-sm">
               <div className="bg-white/10 rounded p-3">
-                <strong>integer()</strong> - liczby całkowite (INTEGER)
+                <strong>Int</strong> - liczby całkowite
               </div>
               <div className="bg-white/10 rounded p-3">
-                <strong>text()</strong> - tekst (TEXT)
+                <strong>String</strong> - tekst
               </div>
               <div className="bg-white/10 rounded p-3">
-                <strong>real()</strong> - liczby dziesiętne (REAL)
+                <strong>Float</strong> - liczby dziesiętne
               </div>
               <div className="bg-white/10 rounded p-3">
-                <strong>blob()</strong> - dane binarne (BLOB)
+                <strong>DateTime</strong> - data i czas
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>Boolean</strong> - true/false
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>String?</strong> - opcjonalne (nullable)
               </div>
             </div>
           </div>
 
           <div className="bg-green-500/20 rounded-xl p-5">
-            <h4 className="text-lg font-bold mb-3">🔧 Metody modyfikacji</h4>
+            <h4 className="text-lg font-bold mb-3">🔧 Atrybuty (dekoratory)</h4>
             <div className="space-y-2 text-sm">
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">.primaryKey()</code> - klucz główny
+                <code className="text-green-400">@id</code> - klucz główny
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">.notNull()</code> - pole wymagane
+                <code className="text-green-400">@default(autoincrement())</code> - auto-increment
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">.default('value')</code> - wartość domyślna
+                <code className="text-green-400">@default(now())</code> - aktualna data/czas
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">.$inferSelect</code> - typ do odczytu
-              </div>
-              <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">.$inferInsert</code> - typ do wstawienia
+                <code className="text-green-400">@relation</code> - relacja między modelami
               </div>
             </div>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Type Inference:</strong> Drizzle automatycznie wywnioskuje typy TypeScript 
-            z schema! Nie musisz pisać interfejsów ręcznie.
+            <strong>💡 Ważne:</strong> Model <code className="bg-black/30 px-2 py-1 rounded">Produkt</code> 
+            automatycznie staje się tabelą <code className="bg-black/30 px-2 py-1 rounded">Produkt</code> 
+            (Prisma używa PascalCase dla modeli, ale możesz zmienić przez <code className="bg-black/30 px-2 py-1 rounded">@@map</code>)
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'relations',
+      title: 'Relacje - hasMany i belongsTo',
+      icon: '🔗',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-purple-400">Relacje</strong> w Prisma działają jak w Laravel! 
+            <code>hasMany</code>, <code>belongsTo</code> - wszystko wspierane!
+          </p>
+
+          <div className="bg-purple-500/20 rounded-xl p-6 border-2 border-purple-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔗 Przykład relacji</h3>
+            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
+              <code className="text-green-400">{`// Jeden Produkt ma wiele Zamówień (hasMany)
+model Produkt {
+  id        Int      @id @default(autoincrement())
+  nazwa     String
+  cena      Float
+  
+  // hasMany - jeden produkt, wiele zamówień
+  zamowienia Zamowienie[]  // Tablica = hasMany
+}
+
+// Zamówienie należy do Produktu (belongsTo)
+model Zamowienie {
+  id        Int      @id @default(autoincrement())
+  ilosc     Int
+  produktId Int      // Foreign key
+  
+  // belongsTo - zamówienie należy do produktu
+  produkt   Produkt  @relation(fields: [produktId], references: [id])
+}`}</code>
+            </pre>
+          </div>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 Jak to działa?</h4>
+            <div className="space-y-3 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <strong className="text-blue-400">hasMany:</strong>
+                <p className="mt-1">
+                  <code className="bg-black/30 px-1 rounded">zamowienia Zamowienie[]</code> - 
+                  tablica oznacza "wiele" (hasMany)
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong className="text-green-400">belongsTo:</strong>
+                <p className="mt-1">
+                  <code className="bg-black/30 px-1 rounded">produkt Produkt</code> - 
+                  pojedynczy obiekt oznacza "należy do" (belongsTo)
+                </p>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong className="text-purple-400">@relation:</strong>
+                <p className="mt-1">
+                  Definiuje jak tabele są połączone (foreign key)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">💻 Użycie relacji w queries</h4>
+            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
+              <code className="text-green-400">{`// Pobierz produkt z jego zamówieniami (include)
+const produkt = await prisma.produkt.findUnique({
+  where: { id: 1 },
+  include: {
+    zamowienia: true  // Załaduj relację!
+  }
+});
+// produkt.zamowienia - tablica zamówień!
+
+// Pobierz zamówienie z produktem
+const zamowienie = await prisma.zamowienie.findUnique({
+  where: { id: 1 },
+  include: {
+    produkt: true  // Załaduj produkt!
+  }
+});
+// zamowienie.produkt - obiekt produktu!`}</code>
+            </pre>
+            <p className="text-sm mt-3">
+              <strong>To jest jak Laravel Eloquent!</strong> <code>include</code> = <code>with()</code> w Laravel
+            </p>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Inne typy relacji:</strong>
+            <ul className="text-sm mt-2 space-y-1">
+              <li>• <code className="bg-black/30 px-1 rounded">hasOne</code> - jeden do jednego</li>
+              <li>• <code className="bg-black/30 px-1 rounded">hasMany</code> - jeden do wielu</li>
+              <li>• <code className="bg-black/30 px-1 rounded">belongsTo</code> - wiele do jednego</li>
+              <li>• <code className="bg-black/30 px-1 rounded">manyToMany</code> - wiele do wielu</li>
+            </ul>
           </div>
         </div>
       )
     },
     {
       id: 'database-connection',
-      title: 'Połączenie z bazą (lib/db.ts)',
+      title: 'Połączenie z bazą (lib/prisma.ts)',
       icon: '🔌',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Stwórz instancję Drizzle połączoną z SQLite!
+            Stwórz instancję Prisma Client do użycia w całej aplikacji!
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">💻 lib/db.ts z Drizzle</h3>
+            <h3 className="text-2xl font-bold mb-4">💻 lib/prisma.ts</h3>
             <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`import { drizzle } from 'drizzle-orm/better-sqlite3';
-import Database from 'better-sqlite3';
-import * as schema from './schema';
+              <code className="text-green-400">{`import { PrismaClient } from '@prisma/client';
 
-// Utwórz połączenie z SQLite
-const sqlite = new Database('./database.db');
+// Singleton pattern - jedna instancja dla całej aplikacji
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-// Utwórz instancję Drizzle z schema
-export const db = drizzle(sqlite, { schema });
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === 'development' 
+    ? ['query', 'error', 'warn'] 
+    : ['error'],
+});
 
-// Eksportuj schema żeby używać w queries
-export * from './schema';`}</code>
+// W development, zapisz instancję w globalThis
+// (Next.js hot reload nie tworzy nowych instancji)
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}`}</code>
             </pre>
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-6">
             <h4 className="text-xl font-bold mb-3">🎯 Co się dzieje?</h4>
             <ul className="space-y-2 text-sm">
-              <li>• <strong>better-sqlite3</strong> - połączenie z plikiem SQLite</li>
-              <li>• <strong>drizzle()</strong> - wrapper który dodaje ORM funkcje</li>
-              <li>• <strong>schema</strong> - przekazujemy definicje tabel</li>
-              <li>• <strong>db</strong> - gotowa instancja do queries!</li>
+              <li>• <strong>PrismaClient</strong> - główna klasa do queries</li>
+              <li>• <strong>Singleton</strong> - jedna instancja (nie tworz wielu!)</li>
+              <li>• <strong>globalThis</strong> - zapisuje instancję w development (Next.js hot reload)</li>
+              <li>• <strong>log</strong> - opcjonalne logowanie queries (tylko w dev)</li>
             </ul>
           </div>
 
           <div className="bg-green-500/20 rounded-xl p-5">
-            <h4 className="text-lg font-bold mb-3">📝 Singleton Pattern</h4>
-            <p className="text-sm mb-2">
-              W Next.js, moduły są cache'owane, więc <code className="bg-black/30 px-1 rounded">db</code> 
-              będzie utworzony tylko raz. Bezpieczne!
-            </p>
+            <h4 className="text-lg font-bold mb-3">📝 Użycie</h4>
             <pre className="bg-black/50 rounded p-3 text-xs">
               <code className="text-green-400">{`// W każdym pliku:
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
-// db jest zawsze ta sama instancja
-// Nie musisz się martwić o wiele połączeń`}</code>
+// Użyj modeli!
+const produkty = await prisma.produkt.findMany();
+const produkt = await prisma.produkt.findUnique({ where: { id: 1 } });`}</code>
             </pre>
+            <p className="text-sm mt-3">
+              <strong>prisma.produkt</strong> - model Produkt z schema.prisma!
+            </p>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Production:</strong> W produkcji (Docker) użyj <code className="bg-black/30 px-2 py-1 rounded">/app/data/database.db</code> 
-            zamiast <code className="bg-black/30 px-2 py-1 rounded">./database.db</code>
+            <strong>💡 Production:</strong> W produkcji (Docker) użyj <code className="bg-black/30 px-2 py-1 rounded">file:/app/data/database.db</code> 
+            w <code className="bg-black/30 px-2 py-1 rounded">schema.prisma</code>
           </div>
         </div>
       )
     },
     {
-      id: 'basic-queries',
-      title: 'Podstawowe Queries',
-      icon: '🔍',
+      id: 'laravel-like-api',
+      title: 'API jak Laravel - findMany, findUnique',
+      icon: '🎯',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Zobacz jak używać Drizzle do <strong className="text-blue-400">CRUD operations</strong>!
+            Prisma ma <strong className="text-purple-400">API identyczne jak Laravel Eloquent</strong>! 
+            <code>findMany()</code> = <code>all()</code>, <code>findUnique()</code> = <code>find()</code>!
+          </p>
+
+          <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-6 border-2 border-purple-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔄 Porównanie: Laravel vs Prisma</h3>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-green-500/20 rounded p-4">
+                <h4 className="text-lg font-bold mb-2 text-green-400">✅ Laravel/PHP</h4>
+                <pre className="bg-black/50 rounded p-3 text-xs">
+                  <code className="text-green-400">{`// Wszystkie
+Produkt::all();
+
+// Jeden po ID
+Produkt::find(1);
+
+// Where
+Produkt::where('cena', '>', 100)
+  ->get();
+
+// Create
+Produkt::create([
+  'nazwa' => 'Laptop',
+  'cena' => 2999
+]);
+
+// Update
+Produkt::find(1)
+  ->update(['cena' => 2499]);
+
+// Delete
+Produkt::find(1)->delete();`}</code>
+                </pre>
+              </div>
+
+              <div className="bg-blue-500/20 rounded p-4">
+                <h4 className="text-lg font-bold mb-2 text-blue-400">✅ Prisma/TypeScript</h4>
+                <pre className="bg-black/50 rounded p-3 text-xs">
+                  <code className="text-blue-400">{`// Wszystkie
+await prisma.produkt.findMany();
+
+// Jeden po ID
+await prisma.produkt.findUnique({
+  where: { id: 1 }
+});
+
+// Where
+await prisma.produkt.findMany({
+  where: { cena: { gt: 100 } }
+});
+
+// Create
+await prisma.produkt.create({
+  data: {
+    nazwa: 'Laptop',
+    cena: 2999
+  }
+});
+
+// Update
+await prisma.produkt.update({
+  where: { id: 1 },
+  data: { cena: 2499 }
+});
+
+// Delete
+await prisma.produkt.delete({
+  where: { id: 1 }
+});`}</code>
+                </pre>
+              </div>
+            </div>
+            <p className="text-sm mt-4 text-center">
+              <strong>Prawie identyczne!</strong> Tylko składnia TypeScript zamiast PHP 🎯
+            </p>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 Różnice:</strong>
+            <ul className="text-sm mt-2 space-y-1">
+              <li>• Laravel: <code className="bg-black/30 px-1 rounded">all()</code> → Prisma: <code className="bg-black/30 px-1 rounded">findMany()</code></li>
+              <li>• Laravel: <code className="bg-black/30 px-1 rounded">find(1)</code> → Prisma: <code className="bg-black/30 px-1 rounded">findUnique({where: {id: 1}})</code></li>
+              <li>• Laravel: <code className="bg-black/30 px-1 rounded">where('cena', '>', 100)</code> → Prisma: <code className="bg-black/30 px-1 rounded">where: {cena: {gt: 100}}</code></li>
+            </ul>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'sql-vs-prisma',
+      title: 'Długie SQL → Krótkie Prisma',
+      icon: '⚡',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Zobacz jak <strong className="text-red-400">długie SQL queries</strong> stają się 
+            <strong className="text-green-400"> krótkimi Prisma queries</strong>!
+          </p>
+
+          <div className="space-y-4">
+            <div className="bg-red-500/20 rounded-xl p-5 border-l-4 border-red-500">
+              <h4 className="text-xl font-bold mb-3 text-red-400">❌ Długie SQL Query</h4>
+              <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
+                <code className="text-white/70">{`const db = getDatabase();
+const rows = db.prepare(\`
+  SELECT 
+    p.id,
+    p.nazwa,
+    p.cena,
+    p.opis,
+    COUNT(z.id) as liczba_zamowien,
+    SUM(z.ilosc * p.cena) as suma_wartosci
+  FROM produkty p
+  LEFT JOIN zamowienia z ON p.id = z.produkt_id
+  WHERE p.cena > ?
+    AND p.nazwa LIKE ?
+    AND p.utworzono >= ?
+  GROUP BY p.id
+  HAVING COUNT(z.id) > ?
+  ORDER BY p.cena DESC
+  LIMIT ?
+\`).all(100, '%Laptop%', '2024-01-01', 5, 10);
+
+// 15 linii SQL!
+// Trudno czytać
+// Łatwo o błąd
+// Brak type safety`}</code>
+              </pre>
+            </div>
+
+            <div className="text-center text-3xl">⬇️</div>
+
+            <div className="bg-green-500/20 rounded-xl p-5 border-l-4 border-green-500">
+              <h4 className="text-xl font-bold mb-3 text-green-400">✅ Krótkie Prisma Query</h4>
+              <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
+                <code className="text-green-400">{`const produkty = await prisma.produkt.findMany({
+  where: {
+    cena: { gt: 100 },
+    nazwa: { contains: 'Laptop' },
+    utworzono: { gte: new Date('2024-01-01') }
+  },
+  include: {
+    zamowienia: {
+      _count: true
+    }
+  },
+  having: {
+    zamowienia: {
+      _count: { gt: 5 }
+    }
+  },
+  orderBy: { cena: 'desc' },
+  take: 10
+});
+
+// 12 linii czytelnego kodu!
+// TypeScript type safety
+// Autocomplete działa
+// Łatwo refaktorować`}</code>
+              </pre>
+            </div>
+          </div>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">📊 Porównanie</h4>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <strong className="text-red-400">SQL:</strong>
+                <ul className="mt-2 space-y-1">
+                  <li>• 15 linii kodu</li>
+                  <li>• Trudno czytać</li>
+                  <li>• Brak type safety</li>
+                  <li>• Łatwo o literówkę</li>
+                </ul>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong className="text-green-400">Prisma:</strong>
+                <ul className="mt-2 space-y-1">
+                  <li>• 12 linii kodu</li>
+                  <li>• Czytelne i logiczne</li>
+                  <li>• Full type safety</li>
+                  <li>• Autocomplete w IDE</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-4">
+            <strong>💡 To jest główna zaleta ORM!</strong> 
+            Zamiast pisać długie SQL queries, piszesz krótki, czytelny kod JavaScript/TypeScript.
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'crud-examples',
+      title: 'CRUD w Prisma - Kompletne przykłady',
+      icon: '✏️',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Kompletne przykłady <strong className="text-blue-400">CRUD operations</strong> w Prisma!
           </p>
 
           <div className="space-y-4">
             <div className="bg-green-500/20 rounded-xl p-5 border-l-4 border-green-500">
-              <h4 className="text-xl font-bold mb-3 text-green-400">📖 READ (SELECT)</h4>
+              <h4 className="text-xl font-bold mb-3 text-green-400">📖 READ (findMany, findUnique)</h4>
               <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-                <code className="text-green-400">{`import { db, produkty } from '@/lib/db';
-import { eq, gt } from 'drizzle-orm';
+                <code className="text-green-400">{`import { prisma } from '@/lib/prisma';
 
-// Pobierz wszystkie
-const wszystkie = await db.select().from(produkty);
+// Wszystkie produkty
+const wszystkie = await prisma.produkt.findMany();
 
-// Pobierz jeden (WHERE id = 1)
-const jeden = await db
-  .select()
-  .from(produkty)
-  .where(eq(produkty.id, 1));
+// Jeden po ID
+const jeden = await prisma.produkt.findUnique({
+  where: { id: 1 }
+});
 
-// Pobierz droższe niż 100 (WHERE cena > 100)
-const drogie = await db
-  .select()
-  .from(produkty)
-  .where(gt(produkty.cena, 100));`}</code>
+// Z warunkami (WHERE)
+const drogie = await prisma.produkt.findMany({
+  where: {
+    cena: { gt: 100 },
+    nazwa: { contains: 'Laptop' }
+  },
+  orderBy: { cena: 'desc' },
+  take: 10  // LIMIT
+});
+
+// Z relacjami (JOIN)
+const zZamowieniami = await prisma.produkt.findUnique({
+  where: { id: 1 },
+  include: {
+    zamowienia: true  // Załaduj zamówienia!
+  }
+});`}</code>
               </pre>
             </div>
 
             <div className="bg-blue-500/20 rounded-xl p-5 border-l-4 border-blue-500">
-              <h4 className="text-xl font-bold mb-3 text-blue-400">✏️ CREATE (INSERT)</h4>
+              <h4 className="text-xl font-bold mb-3 text-blue-400">✏️ CREATE</h4>
               <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-                <code className="text-blue-400">{`// Wstaw jeden rekord
-const nowy = await db.insert(produkty).values({
-  nazwa: 'Laptop',
-  opis: 'Gaming laptop',
-  cena: 2999.99,
-}).returning(); // Zwraca wstawiony rekord
+                <code className="text-blue-400">{`// Utwórz jeden
+const nowy = await prisma.produkt.create({
+  data: {
+    nazwa: 'Laptop',
+    opis: 'Gaming laptop',
+    cena: 2999.99
+  }
+});
 
-// Wstaw wiele
-await db.insert(produkty).values([
-  { nazwa: 'Mysz', cena: 49.99 },
-  { nazwa: 'Klawiatura', cena: 199.99 },
-]);`}</code>
+// Utwórz wiele
+await prisma.produkt.createMany({
+  data: [
+    { nazwa: 'Mysz', cena: 49.99 },
+    { nazwa: 'Klawiatura', cena: 199.99 }
+  ]
+});
+
+// Utwórz z relacją
+await prisma.zamowienie.create({
+  data: {
+    ilosc: 2,
+    produkt: {
+      connect: { id: 1 }  // Połącz z istniejącym produktem
+    }
+  }
+});`}</code>
               </pre>
             </div>
 
             <div className="bg-yellow-500/20 rounded-xl p-5 border-l-4 border-yellow-500">
               <h4 className="text-xl font-bold mb-3 text-yellow-400">🔄 UPDATE</h4>
               <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-                <code className="text-yellow-400">{`import { eq } from 'drizzle-orm';
+                <code className="text-yellow-400">{`// Zaktualizuj jeden
+await prisma.produkt.update({
+  where: { id: 1 },
+  data: { cena: 2499.99 }
+});
 
-// Zaktualizuj jeden (WHERE id = 1)
-await db
-  .update(produkty)
-  .set({ cena: 2499.99 })
-  .where(eq(produkty.id, 1));
+// Zaktualizuj wiele
+await prisma.produkt.updateMany({
+  where: { cena: { lt: 50 } },
+  data: { cena: 49.99 }
+});
 
-// Zaktualizuj wiele (WHERE cena < 50)
-await db
-  .update(produkty)
-  .set({ cena: 49.99 })
-  .where(lt(produkty.cena, 50));`}</code>
+// Upsert (update lub create)
+await prisma.produkt.upsert({
+  where: { id: 1 },
+  update: { cena: 2499 },
+  create: {
+    nazwa: 'Laptop',
+    cena: 2499
+  }
+});`}</code>
               </pre>
             </div>
 
             <div className="bg-red-500/20 rounded-xl p-5 border-l-4 border-red-500">
               <h4 className="text-xl font-bold mb-3 text-red-400">🗑️ DELETE</h4>
               <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-                <code className="text-red-400">{`// Usuń jeden (WHERE id = 1)
-await db
-  .delete(produkty)
-  .where(eq(produkty.id, 1));
+                <code className="text-red-400">{`// Usuń jeden
+await prisma.produkt.delete({
+  where: { id: 1 }
+});
 
-// Usuń wszystkie droższe niż 1000
-await db
-  .delete(produkty)
-  .where(gt(produkty.cena, 1000));`}</code>
+// Usuń wiele
+await prisma.produkt.deleteMany({
+  where: { cena: { gt: 1000 } }
+});
+
+// Usuń wszystkie
+await prisma.produkt.deleteMany({});`}</code>
               </pre>
             </div>
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-4">
-            <strong>💡 Type Safety:</strong> TypeScript sprawdzi czy używasz poprawnych nazw kolumn! 
-            Literówka = błąd kompilacji.
+            <strong>💡 Type Safety:</strong> Wszystkie queries są type-safe! 
+            TypeScript wie jakie pola możesz użyć w <code className="bg-black/30 px-2 py-1 rounded">where</code>, 
+            <code className="bg-black/30 px-2 py-1 rounded">data</code>, etc.
           </div>
         </div>
       )
     },
     {
-      id: 'repository-pattern',
-      title: 'Repository Pattern z Drizzle',
-      icon: '📚',
+      id: 'final-implementation',
+      title: 'Finalna implementacja w API Routes',
+      icon: '🚀',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-purple-400">Repository Pattern</strong> to warstwa abstrakcji 
-            nad bazą danych. <strong>Oddziela logikę od szczegółów implementacji</strong>!
+            Zobacz jak używać <strong className="text-purple-400">Prisma w API Routes</strong> - 
+            finalna implementacja!
           </p>
 
-          <div className="bg-purple-500/20 rounded-xl p-6 border-2 border-purple-500/50">
-            <h3 className="text-2xl font-bold mb-4">📚 Dlaczego Repository?</h3>
-            <div className="space-y-3">
-              <div className="bg-white/10 rounded p-4">
-                <strong className="text-purple-400">1. Separacja odpowiedzialności</strong>
-                <p className="text-sm mt-2">
-                  API Route → wywołuje Repository → Repository → wykonuje query
-                </p>
-              </div>
-              <div className="bg-white/10 rounded p-4">
-                <strong className="text-blue-400">2. Testowanie</strong>
-                <p className="text-sm mt-2">
-                  Możesz mockować Repository bez prawdziwej bazy danych
-                </p>
-              </div>
-              <div className="bg-white/10 rounded p-4">
-                <strong className="text-green-400">3. Reużywalność</strong>
-                <p className="text-sm mt-2">
-                  Ten sam Repository w wielu miejscach (API, Server Components, etc.)
-                </p>
-              </div>
-            </div>
-          </div>
-
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">💻 Przykład: lib/repositories/produktRepository.ts</h4>
+            <h4 className="text-xl font-bold mb-3">💻 app/api/produkty/route.ts</h4>
             <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`import { db, produkty } from '@/lib/db';
-import { eq, gt, desc } from 'drizzle-orm';
-import type { NewProdukt } from '@/lib/schema';
+              <code className="text-green-400">{`import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-export const produktRepository = {
-  // Pobierz wszystkie produkty
-  findAll: async () => {
-    return await db.select().from(produkty);
-  },
+// GET /api/produkty
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const minCena = searchParams.get('minCena');
+    
+    // Prisma query - krótkie i czytelne!
+    const produkty = await prisma.produkt.findMany({
+      where: minCena 
+        ? { cena: { gte: parseFloat(minCena) } }
+        : {},
+      orderBy: { utworzono: 'desc' },
+      include: {
+        zamowienia: {
+          _count: true  // Liczba zamówień
+        }
+      }
+    });
+    
+    return NextResponse.json({
+      success: true,
+      data: produkty
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Błąd pobierania produktów' },
+      { status: 500 }
+    );
+  }
+}
 
-  // Pobierz jeden po ID
-  findById: async (id: number) => {
-    const result = await db
-      .select()
-      .from(produkty)
-      .where(eq(produkty.id, id))
-      .limit(1);
-    return result[0] || null;
-  },
-
-  // Pobierz droższe niż X
-  findByPriceGreaterThan: async (cena: number) => {
-    return await db
-      .select()
-      .from(produkty)
-      .where(gt(produkty.cena, cena))
-      .orderBy(desc(produkty.cena));
-  },
-
-  // Utwórz nowy produkt
-  create: async (data: NewProdukt) => {
-    const result = await db
-      .insert(produkty)
-      .values(data)
-      .returning();
-    return result[0];
-  },
-
-  // Zaktualizuj produkt
-  update: async (id: number, data: Partial<NewProdukt>) => {
-    const result = await db
-      .update(produkty)
-      .set(data)
-      .where(eq(produkty.id, id))
-      .returning();
-    return result[0] || null;
-  },
-
-  // Usuń produkt
-  delete: async (id: number) => {
-    await db.delete(produkty).where(eq(produkty.id, id));
-  },
-};`}</code>
+// POST /api/produkty
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { nazwa, opis, cena } = body;
+    
+    // Walidacja
+    if (!nazwa || !cena) {
+      return NextResponse.json(
+        { success: false, error: 'Nazwa i cena są wymagane' },
+        { status: 400 }
+      );
+    }
+    
+    // Prisma create - super proste!
+    const nowy = await prisma.produkt.create({
+      data: {
+        nazwa,
+        opis: opis || null,
+        cena: parseFloat(cena)
+      }
+    });
+    
+    return NextResponse.json({
+      success: true,
+      data: nowy
+    }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Błąd tworzenia produktu' },
+      { status: 500 }
+    );
+  }
+}`}</code>
             </pre>
           </div>
 
           <div className="bg-green-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🎯 Użycie w API Route</h4>
+            <h4 className="text-xl font-bold mb-3">💻 app/api/produkty/[id]/route.ts</h4>
             <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`// app/api/produkty/route.ts
-import { produktRepository } from '@/lib/repositories/produktRepository';
+              <code className="text-green-400">{`import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
-export async function GET() {
-  const produkty = await produktRepository.findAll();
-  return Response.json({ success: true, data: produkty });
+// GET /api/produkty/[id]
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const produkt = await prisma.produkt.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        zamowienia: true  // Załaduj relację!
+      }
+    });
+    
+    if (!produkt) {
+      return NextResponse.json(
+        { success: false, error: 'Produkt nie znaleziony' },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json({ success: true, data: produkt });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Błąd pobierania produktu' },
+      { status: 500 }
+    );
+  }
 }
 
-export async function POST(request: Request) {
-  const body = await request.json();
-  const nowy = await produktRepository.create(body);
-  return Response.json({ success: true, data: nowy }, { status: 201 });
+// PUT /api/produkty/[id]
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    
+    const zaktualizowany = await prisma.produkt.update({
+      where: { id: parseInt(id) },
+      data: body
+    });
+    
+    return NextResponse.json({ success: true, data: zaktualizowany });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Błąd aktualizacji' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/produkty/[id]
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    await prisma.produkt.delete({
+      where: { id: parseInt(id) }
+    });
+    
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Błąd usuwania' },
+      { status: 500 }
+    );
+  }
 }`}</code>
             </pre>
-            <p className="text-sm mt-3">
-              <strong>Kod jest czysty!</strong> API Route tylko obsługuje HTTP, 
-              Repository zajmuje się bazą danych.
-            </p>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 Co widzisz?</h4>
+            <ul className="space-y-2 text-sm">
+              <li>✓ <strong>Krótki kod</strong> - zamiast długich SQL queries</li>
+              <li>✓ <strong>Type-safe</strong> - TypeScript sprawdza wszystko</li>
+              <li>✓ <strong>Relacje</strong> - łatwo załadować powiązane dane</li>
+              <li>✓ <strong>Czytelne</strong> - kod mówi co robi</li>
+              <li>✓ <strong>Laravel-like</strong> - jeśli znasz Laravel, Prisma jest intuicyjna!</li>
+            </ul>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Best Practice:</strong> Jeden Repository = jedna tabela. 
-            Jeśli masz relacje, możesz dodać metody które łączą tabele (JOIN).
+            <strong>💡 To jest finalna implementacja!</strong>
+            <p className="text-sm mt-2">
+              Zamiast pisać SQL ręcznie, używasz Prisma która generuje SQL za Ciebie. 
+              Kod jest krótszy, bezpieczniejszy i łatwiejszy w utrzymaniu!
+            </p>
           </div>
         </div>
       )
     },
     {
-      id: 'drizzle-vs-raw',
-      title: 'Drizzle vs Raw SQL - Kiedy co?',
-      icon: '⚖️',
+      id: 'migrations',
+      title: 'Migracje - Zmiany w bazie',
+      icon: '🔄',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Kiedy używać <strong className="text-blue-400">Drizzle</strong>, a kiedy 
-            <strong className="text-green-400"> raw SQL</strong>?
+            <strong className="text-blue-400">Migracje</strong> w Prisma działają jak w Laravel! 
+            Zmieniasz model → Prisma tworzy migrację → aplikujesz migrację!
           </p>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-blue-500/20 rounded-xl p-5 border-2 border-blue-500/50">
-              <h4 className="text-xl font-bold mb-3 text-blue-400">❄️ Użyj Drizzle gdy:</h4>
-              <ul className="space-y-2 text-sm">
-                <li>✓ Chcesz type safety</li>
-                <li>✓ Projekt rośnie (wiele tabel)</li>
-                <li>✓ Potrzebujesz migracji</li>
-                <li>✓ Zespół pracuje nad projektem</li>
-                <li>✓ Możliwa zmiana bazy (SQLite → PostgreSQL)</li>
-                <li>✓ Chcesz autocomplete w IDE</li>
-                <li>✓ Proste do średnio-złożone queries</li>
-              </ul>
-            </div>
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">🔄 Workflow migracji</h3>
+            <div className="space-y-4">
+              <div className="bg-white/10 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-4xl">1️⃣</span>
+                  <h4 className="text-xl font-bold text-blue-400">Zmień schema.prisma</h4>
+                </div>
+                <pre className="bg-black/50 rounded p-3 text-xs">
+                  <code className="text-blue-400">{`// Dodaj nową kolumnę
+model Produkt {
+  id        Int      @id @default(autoincrement())
+  nazwa     String
+  cena      Float
+  kategoria String?  // ← NOWA KOLUMNA
+}`}</code>
+                </pre>
+              </div>
 
-            <div className="bg-green-500/20 rounded-xl p-5 border-2 border-green-500/50">
-              <h4 className="text-xl font-bold mb-3 text-green-400">📝 Użyj Raw SQL gdy:</h4>
-              <ul className="space-y-2 text-sm">
-                <li>✓ Bardzo proste projekty (1-2 tabele)</li>
-                <li>✓ Chcesz pełną kontrolę nad SQL</li>
-                <li>✓ Bardzo złożone queries (window functions, CTEs)</li>
-                <li>✓ Minimalne zależności</li>
-                <li>✓ Uczysz się SQL</li>
-                <li>✓ Performance jest krytyczny</li>
-                <li>✓ Masz legacy SQL queries</li>
-              </ul>
+              <div className="text-center text-3xl">⬇️</div>
+
+              <div className="bg-white/10 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-4xl">2️⃣</span>
+                  <h4 className="text-xl font-bold text-green-400">Utwórz migrację</h4>
+                </div>
+                <pre className="bg-black/50 rounded p-3 text-xs">
+                  <code className="text-green-400">{`npx prisma migrate dev --name add_kategoria
+
+# Prisma:
+# 1. Porównuje schema z bazą
+# 2. Tworzy plik migracji SQL
+# 3. Aplikuje migrację do bazy
+# 4. Regeneruje Prisma Client`}</code>
+                </pre>
+              </div>
+
+              <div className="text-center text-3xl">⬇️</div>
+
+              <div className="bg-white/10 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-4xl">3️⃣</span>
+                  <h4 className="text-xl font-bold text-purple-400">Gotowe!</h4>
+                </div>
+                <p className="text-sm">
+                  Baza danych zaktualizowana! Możesz używać <code className="bg-black/30 px-1 rounded">kategoria</code> 
+                  w queries!
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="bg-purple-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🔄 Możesz łączyć oba!</h4>
-            <p className="text-sm mb-3">
-              Drizzle pozwala używać raw SQL gdy potrzeba:
-            </p>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-purple-400">{`import { sql } from 'drizzle-orm';
+          <div className="bg-green-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">📝 Komendy migracji</h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <code className="text-green-400">npx prisma migrate dev</code> - utwórz i aplikuj migrację (development)
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <code className="text-green-400">npx prisma migrate deploy</code> - aplikuj migracje (production)
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <code className="text-green-400">npx prisma migrate reset</code> - usuń wszystkie dane i aplikuj migracje od nowa
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <code className="text-green-400">npx prisma generate</code> - regeneruj Prisma Client (po zmianie schema)
+              </div>
+            </div>
+          </div>
 
-// Proste queries - Drizzle
-const produkty = await db.select().from(produkty);
+          <div className="bg-purple-500/20 rounded-xl p-4">
+            <strong>💡 Tip:</strong> Migracje są zapisywane w <code className="bg-black/30 px-2 py-1 rounded">prisma/migrations/</code>. 
+            Commituj je do Git - to historia zmian w bazie!
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'prisma-studio',
+      title: 'Prisma Studio - GUI do bazy',
+      icon: '🎨',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-purple-400">Prisma Studio</strong> to GUI do przeglądania i edycji 
+            danych w bazie. <strong>Darmowe i wbudowane!</strong>
+          </p>
 
-// Złożone query - Raw SQL
-const wynik = await db.execute(sql\`
-  SELECT 
-    p.*,
-    COUNT(o.id) as liczba_zamowien
-  FROM produkty p
-  LEFT JOIN zamowienia o ON p.id = o.produkt_id
-  GROUP BY p.id
-  HAVING COUNT(o.id) > 5
-\`);`}</code>
+          <div className="bg-purple-500/20 rounded-xl p-6 border-2 border-purple-500/50">
+            <h3 className="text-2xl font-bold mb-4">🎨 Uruchomienie</h3>
+            <pre className="bg-black/50 rounded p-4 text-sm">
+              <code className="text-purple-400">{`npx prisma studio
+
+# Otworzy się w przeglądarce:
+# http://localhost:5555`}</code>
             </pre>
+            <p className="text-sm mt-3">
+              <strong>To jak phpMyAdmin dla SQLite!</strong> Możesz przeglądać, edytować, dodawać dane.
+            </p>
+          </div>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 Co możesz robić?</h4>
+            <ul className="space-y-2 text-sm">
+              <li>✓ <strong>Przeglądać tabele</strong> - wszystkie modele z schema.prisma</li>
+              <li>✓ <strong>Dodawać rekordy</strong> - kliknij "Add record"</li>
+              <li>✓ <strong>Edytować dane</strong> - kliknij na rekord</li>
+              <li>✓ <strong>Usuwać rekordy</strong> - przycisk delete</li>
+              <li>✓ <strong>Filtrować</strong> - wyszukiwanie i filtry</li>
+              <li>✓ <strong>Relacje</strong> - zobacz powiązane dane</li>
+            </ul>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-5">
+            <h4 className="text-lg font-bold mb-3">💡 Kiedy używać?</h4>
+            <ul className="text-sm space-y-2">
+              <li>• <strong>Development</strong> - szybkie sprawdzenie danych</li>
+              <li>• <strong>Debugging</strong> - zobacz co jest w bazie</li>
+              <li>• <strong>Testowanie</strong> - dodaj testowe dane</li>
+              <li>• <strong>Nauka</strong> - zobacz jak wyglądają dane</li>
+            </ul>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Rekomendacja dla Twojego projektu:</strong>
-            <ul className="text-sm mt-2 space-y-1">
-              <li>• <strong>Teraz:</strong> Zostań przy better-sqlite3 (uczysz się SQL)</li>
-              <li>• <strong>Gdy projekt urośnie:</strong> Dodaj Drizzle (type safety, łatwiejsze utrzymanie)</li>
-              <li>• <strong>Złożone queries:</strong> Używaj raw SQL nawet z Drizzle</li>
-            </ul>
+            <strong>⚠️ Uwaga:</strong> Prisma Studio działa tylko lokalnie (development). 
+            W produkcji użyj innych narzędzi do zarządzania bazą.
           </div>
         </div>
       )
