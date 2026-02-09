@@ -43,13 +43,19 @@ export default function NoteList({ notes, onDeleteNote, onLog, onStepChange }: N
 
   if (notes.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="bg-white/10 backdrop-blur-lg dark:bg-gray-800/50 rounded-2xl shadow-lg p-6 border border-white/20 dark:border-gray-700">
+        <h3 className="text-xl font-semibold text-white dark:text-white mb-4">
           📝 Lista notatek (React State + SQLite)
         </h3>
-        <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-          Brak notatek. Dodaj pierwszą notatkę używając formularza powyżej.
-        </p>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4 opacity-50">📝</div>
+          <p className="text-white/70 dark:text-gray-400 text-lg">
+            Brak notatek
+          </p>
+          <p className="text-white/50 dark:text-gray-500 text-sm mt-2">
+            Dodaj pierwszą notatkę używając formularza obok →
+          </p>
+        </div>
       </div>
     );
   }
@@ -67,18 +73,25 @@ export default function NoteList({ notes, onDeleteNote, onLog, onStepChange }: N
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{note.tytul}</h4>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-2">{note.tresc}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Utworzono: {new Date(note.utworzono).toLocaleString('pl-PL')}
+                <h4 className="font-semibold text-white dark:text-white mb-2">{note.tytul}</h4>
+                <p className="text-white/80 dark:text-gray-300 text-sm mb-2">{note.tresc}</p>
+                <p className="text-xs text-white/50 dark:text-gray-400">
+                  🕐 {new Date(note.utworzono).toLocaleString('pl-PL')}
                 </p>
               </div>
               <button
                 onClick={() => handleDelete(note.id)}
                 disabled={deletingIds.has(note.id)}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 flex items-center gap-2"
               >
-                {deletingIds.has(note.id) ? 'Usuwanie...' : 'Usuń'}
+                {deletingIds.has(note.id) ? (
+                  <>
+                    <div className="animate-spin">⚙️</div>
+                    Usuwanie...
+                  </>
+                ) : (
+                  '🗑️ Usuń'
+                )}
               </button>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import NoteForm from './NoteForm';
 import NoteList from './NoteList';
 import { StateLog } from './StateTracker';
+import LoadingSpinner, { SkeletonLoader, PulsingDot } from './LoadingSpinner';
 import { Notatka } from '@/app/api/notatki/route';
 
 // ============================================================================
@@ -299,6 +300,29 @@ export default function StackDemoEnhanced({ onAction, onStepChange }: StackDemoP
 
     initializeDemo();
   }, []);
+
+  // Auto-refresh notes every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Silent refresh - don't show full loading animation
+      fetch('/api/notatki')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && JSON.stringify(data.notatki) !== JSON.stringify(notes)) {
+            setNotes(data.notatki);
+            addTimelineEvent({
+              title: '🔄 Auto-refresh',
+              description: `Lista notatek zaktualizowana (${data.notatki.length} notatek)`,
+              technicalDetails: 'Background polling → silent state update',
+              step: 'ui'
+            });
+          }
+        })
+        .catch(err => console.error('Auto-refresh error:', err));
+    }, 10000); // 10 seconds
+
+    return () => clearInterval(interval);
+  }, [notes]);
 
   // ============================================================================
   // DATA FETCHING
@@ -765,9 +789,14 @@ export default function StackDemoEnhanced({ onAction, onStepChange }: StackDemoP
           {/* Middle: Notes list */}
           <div className="lg:col-span-1">
             {isLoading ? (
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center">
-                <div className="animate-spin text-6xl mb-4">⚙️</div>
-                <p className="text-white">Ładowanie notatek...</p>
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-white">
+                    📝 Lista notatek
+                  </h3>
+                  <PulsingDot />
+                </div>
+                <SkeletonLoader count={3} />
               </div>
             ) : (
               <NoteList 
