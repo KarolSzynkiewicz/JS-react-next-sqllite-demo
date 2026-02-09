@@ -1,4 +1,5 @@
 import { Lesson } from '../components/LessonSlider';
+import { useState } from 'react';
 
 export const tailwindBasicsLesson: Lesson = {
   id: 'tailwind-basics',
@@ -6,6 +7,132 @@ export const tailwindBasicsLesson: Lesson = {
   description: 'Styluj komponenty bez pisania CSS!',
   icon: '🎨',
   slides: [
+    {
+      id: 'what-is-css',
+      title: 'Co to jest CSS?',
+      icon: '🎨',
+      content: (
+        <div className="space-y-6">
+          <p className="text-2xl font-semibold">
+            <strong className="text-blue-400">CSS</strong> (Cascading Style Sheets) to język, 
+            który <strong>nadaje wygląd</strong> stronom internetowym!
+          </p>
+
+          <div className="bg-orange-500/20 rounded-xl p-6 border-2 border-orange-500/50">
+            <h3 className="text-2xl font-bold mb-4">🏠 Analogia: Budowa domu</h3>
+            <div className="space-y-3">
+              <div className="bg-white/10 rounded p-4">
+                <strong>🧱 HTML = Struktura</strong>
+                <p className="text-sm mt-2">Fundamenty, ściany, dach. Dom stoi, ale jest szary i nudny.</p>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <strong>🎨 CSS = Dekoracja</strong>
+                <p className="text-sm mt-2">Malowanie ścian, wybór mebli, oświetlenie. Dom wygląda pięknie!</p>
+              </div>
+              <div className="bg-white/10 rounded p-4">
+                <strong>⚙️ JavaScript = Elektronika</strong>
+                <p className="text-sm mt-2">Światła się włączają, drzwi się otwierają. Dom jest interaktywny!</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 Co robi CSS?</h4>
+            <ul className="space-y-2">
+              <li>✓ <strong>Kolory</strong> - tło, tekst, ramki</li>
+              <li>✓ <strong>Rozmiary</strong> - szerokość, wysokość, marginesy</li>
+              <li>✓ <strong>Czcionki</strong> - rozmiar, pogrubienie, rodzina</li>
+              <li>✓ <strong>Layout</strong> - pozycjonowanie elementów</li>
+              <li>✓ <strong>Animacje</strong> - przejścia, transformacje</li>
+            </ul>
+          </div>
+
+          <InteractiveCssDemo />
+
+          <div className="bg-purple-500/20 rounded-xl p-4 text-center">
+            <p className="text-lg">
+              <strong>💡 Bez CSS</strong> strony wyglądałyby jak dokumenty z lat 90. 
+              Tylko czarny tekst na białym tle! 📄
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'how-css-works',
+      title: 'Jak działa CSS?',
+      icon: '⚙️',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            CSS używa <strong className="text-blue-400">selektorów</strong> żeby znaleźć elementy HTML 
+            i nadać im <strong>style</strong>.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📝 Tradycyjny CSS</h3>
+            <pre className="bg-black/50 rounded p-4 text-sm overflow-x-auto mb-4">
+              <code className="text-green-400">{`/* style.css */
+.button {
+  background-color: blue;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: darkblue;
+}`}</code>
+            </pre>
+            <pre className="bg-black/50 rounded p-4 text-sm overflow-x-auto">
+              <code className="text-yellow-400">{`<!-- HTML -->
+<button class="button">Kliknij mnie</button>`}</code>
+            </pre>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3">🎯 3 sposoby dodania CSS</h4>
+            <div className="space-y-3 text-sm">
+              <div className="bg-white/10 rounded p-3">
+                <strong>1. Zewnętrzny plik</strong> (najczęściej)
+                <code className="block mt-1 text-xs bg-black/30 p-2 rounded">
+                  {`<link rel="stylesheet" href="style.css">`}
+                </code>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>2. Wewnętrzny (w {'<head>'})</strong>
+                <code className="block mt-1 text-xs bg-black/30 p-2 rounded">
+                  {`<style> .button { color: blue; } </style>`}
+                </code>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <strong>3. Inline (bezpośrednio)</strong>
+                <code className="block mt-1 text-xs bg-black/30 p-2 rounded">
+                  {`<div style="color: red;">Tekst</div>`}
+                </code>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-red-500/20 rounded-xl p-5 border-2 border-red-500/50">
+            <h4 className="text-xl font-bold mb-3 text-red-300">⚠️ Problemy z tradycyjnym CSS</h4>
+            <ul className="space-y-2 text-sm">
+              <li>❌ Musisz wymyślać nazwy klas (.button, .header, .card...)</li>
+              <li>❌ Trudno znaleźć nieużywane style</li>
+              <li>❌ Konflikty nazw w dużych projektach</li>
+              <li>❌ Dużo pisania tego samego (padding, margin...)</li>
+              <li>❌ Pliki CSS rosną w nieskończoność</li>
+            </ul>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-4">
+            <strong>💡 Rozwiązanie:</strong> Tailwind CSS! (poznasz za chwilę 😉)
+          </div>
+        </div>
+      )
+    },
     {
       id: 'what-is-tailwind',
       title: 'Co to jest Tailwind CSS?',
@@ -638,6 +765,212 @@ export const Button = ({ children }) => (
           </div>
         </div>
       )
+    },
+    {
+      id: 'interactive-playground',
+      title: '🎮 Try it out! - Tailwind Playground',
+      icon: '🎮',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Czas na praktykę! Kliknij <strong className="text-purple-400">"Ostylizuj"</strong> 
+            żeby zobaczyć jak Tailwind zmienia wygląd elementów!
+          </p>
+
+          <TailwindPlayground />
+
+          <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-6 border-2 border-purple-500/50">
+            <h3 className="text-2xl font-bold mb-4">🎨 Co właśnie zrobiłeś?</h3>
+            <p className="mb-3">
+              Dodałeś klasy Tailwind CSS bezpośrednio do elementu! Nie musiałeś:
+            </p>
+            <ul className="space-y-2">
+              <li>❌ Tworzyć osobnego pliku CSS</li>
+              <li>❌ Wymyślać nazw klas</li>
+              <li>❌ Przełączać się między plikami</li>
+              <li>✅ Wszystko w jednym miejscu!</li>
+            </ul>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-5">
+            <h4 className="text-xl font-bold mb-3">💡 Eksperymentuj!</h4>
+            <p>
+              Tailwind ma <strong>setki</strong> klas utility. Im więcej ekserymentujesz, 
+              tym szybciej zapamiętasz najczęściej używane! 🚀
+            </p>
+          </div>
+        </div>
+      )
     }
   ]
 };
+
+// ============================================================================
+// INTERACTIVE COMPONENTS
+// ============================================================================
+
+function InteractiveCssDemo() {
+  const [isStyled, setIsStyled] = useState(false);
+
+  return (
+    <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+      <h4 className="text-xl font-bold mb-4">🎮 Try it out! Kliknij "Ostylizuj"</h4>
+      
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+        <div className="flex-1">
+          <div className="mb-3 text-sm font-semibold text-white/80">
+            {isStyled ? '✅ Ostylizowany (z CSS)' : '❌ Bez CSS'}
+          </div>
+          <div className={isStyled 
+            ? "bg-blue-500 text-white p-6 rounded-xl shadow-lg border-2 border-blue-700 text-center font-bold text-lg"
+            : "text-center p-6"
+          }>
+            To jest przycisk
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <div className="mb-3 text-sm font-semibold text-white/80">Kod CSS:</div>
+          <pre className="bg-black/50 rounded p-3 text-xs overflow-x-auto">
+            <code className={isStyled ? "text-green-400" : "text-gray-500"}>
+              {isStyled ? `background-color: blue;
+color: white;
+padding: 24px;
+border-radius: 12px;
+box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+border: 2px solid darkblue;
+text-align: center;
+font-weight: bold;
+font-size: 18px;` : '/* Brak styli */'}
+            </code>
+          </pre>
+        </div>
+      </div>
+
+      <button
+        onClick={() => setIsStyled(!isStyled)}
+        className="mt-6 w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all"
+      >
+        {isStyled ? '🔄 Usuń style' : '✨ Ostylizuj!'}
+      </button>
+
+      <p className="text-xs text-white/60 mt-3 text-center">
+        Widzisz różnicę? CSS zmienia WSZYSTKO! 🎨
+      </p>
+    </div>
+  );
+}
+
+function TailwindPlayground() {
+  const examples = [
+    {
+      id: 'button',
+      title: 'Przycisk',
+      unstyled: <button>Kliknij mnie</button>,
+      styled: (
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg">
+          Kliknij mnie
+        </button>
+      ),
+      classes: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg'
+    },
+    {
+      id: 'card',
+      title: 'Karta',
+      unstyled: (
+        <div>
+          <div>Tytuł</div>
+          <div>To jest opis karty z treścią</div>
+        </div>
+      ),
+      styled: (
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 shadow-xl">
+          <div className="text-2xl font-bold mb-2">Tytuł</div>
+          <div className="text-white/70">To jest opis karty z treścią</div>
+        </div>
+      ),
+      classes: 'bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20'
+    },
+    {
+      id: 'badge',
+      title: 'Badge',
+      unstyled: <span>Nowy</span>,
+      styled: (
+        <span className="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+          Nowy
+        </span>
+      ),
+      classes: 'bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold'
+    },
+    {
+      id: 'alert',
+      title: 'Alert',
+      unstyled: (
+        <div>
+          ⚠️ Ostrzeżenie: Sprawdź to!
+        </div>
+      ),
+      styled: (
+        <div className="bg-yellow-500/20 border-l-4 border-yellow-500 p-4 rounded">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">⚠️</span>
+            <strong className="text-yellow-300">Ostrzeżenie:</strong>
+            <span>Sprawdź to!</span>
+          </div>
+        </div>
+      ),
+      classes: 'bg-yellow-500/20 border-l-4 border-yellow-500 p-4 rounded'
+    }
+  ];
+
+  const [activeStates, setActiveStates] = useState<Record<string, boolean>>({});
+
+  const toggleStyle = (id: string) => {
+    setActiveStates(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  return (
+    <div className="space-y-6">
+      {examples.map((example) => {
+        const isStyled = activeStates[example.id];
+        return (
+          <div key={example.id} className="bg-blue-500/20 rounded-xl p-6 border border-blue-500/30">
+            <h4 className="text-xl font-bold mb-4">{example.title}</h4>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <div className="text-sm font-semibold text-white/70 mb-3">
+                  {isStyled ? '✅ Z Tailwind' : '❌ Bez styli'}
+                </div>
+                <div className="bg-white/5 rounded-lg p-6 min-h-[100px] flex items-center justify-center">
+                  {isStyled ? example.styled : example.unstyled}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-sm font-semibold text-white/70 mb-3">
+                  Klasy Tailwind:
+                </div>
+                <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto h-[100px] flex items-center">
+                  <code className={isStyled ? "text-cyan-400" : "text-gray-600"}>
+                    {isStyled ? `className="${example.classes}"` : '// Brak klas'}
+                  </code>
+                </pre>
+              </div>
+            </div>
+
+            <button
+              onClick={() => toggleStyle(example.id)}
+              className="mt-4 w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all"
+            >
+              {isStyled ? '🔄 Usuń style Tailwind' : '✨ Dodaj style Tailwind'}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
