@@ -97,6 +97,27 @@ export default function Home() {
           >
             🌤️ Sprawdź Pogodę
           </Link>
+          
+          <Link 
+            href="/cykl-requestu"
+            className="px-8 py-4 bg-orange-600 text-white rounded-lg font-semibold text-lg hover:bg-orange-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            🔄 Cykl Życia Requestu
+          </Link>
+          
+          <Link 
+            href="/lokalizacje"
+            className="px-8 py-4 bg-teal-600 text-white rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            📍 Lokalizacje + Seeder
+          </Link>
+          
+          <Link 
+            href="/demo"
+            className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg font-semibold text-lg hover:from-pink-700 hover:to-rose-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            🎯 Stack Demo - Pełna demonstracja
+          </Link>
         </div>
 
         {/* Dodatkowe informacje */}

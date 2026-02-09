@@ -67,9 +67,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
+    <html lang="pl" suppressHydrationWarning>
       {/* 
         Atrybut lang="pl" ustawia język strony (ważne dla SEO i dostępności)
+        suppressHydrationWarning - wyłącza ostrzeżenie o różnicach między serwerem a klientem (dla dark mode)
       */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

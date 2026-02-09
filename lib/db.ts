@@ -57,6 +57,46 @@ function initDatabase() {
     )
   `);
   
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS lokalizacje (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      miasto TEXT NOT NULL,
+      kraj TEXT NOT NULL,
+      region TEXT,
+      pogoda TEXT,
+      data_sprawdzenia TEXT,
+      utworzono TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS notatki (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tytul TEXT NOT NULL,
+      tresc TEXT NOT NULL,
+      utworzono TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  
+  // Migracja: dodaj brakujące kolumny do istniejącej tabeli
+  try {
+    const columns = db.prepare("PRAGMA table_info(lokalizacje)").all() as Array<{name: string}>;
+    const columnNames = columns.map(col => col.name);
+    
+    if (!columnNames.includes('region')) {
+      db.exec('ALTER TABLE lokalizacje ADD COLUMN region TEXT');
+    }
+    if (!columnNames.includes('pogoda')) {
+      db.exec('ALTER TABLE lokalizacje ADD COLUMN pogoda TEXT');
+    }
+    if (!columnNames.includes('data_sprawdzenia')) {
+      db.exec('ALTER TABLE lokalizacje ADD COLUMN data_sprawdzenia TEXT');
+    }
+  } catch (error) {
+    // Tabela nie istnieje jeszcze - zostanie utworzona z pełnym schematem
+    console.log('Tabela lokalizacje nie istnieje, zostanie utworzona');
+  }
+  
   console.log('✅ Baza danych zainicjalizowana pomyślnie');
   
   return db;
