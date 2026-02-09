@@ -294,7 +294,7 @@ export default function Weather({ city }: { city: string }) {
                 <p className="text-xs mt-1 opacity-70">Pobierz klucz z .env.local (bezpieczeństwo!)</p>
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">const url = \`...?q=\${city}&appid=\${API_KEY}\`</code>
+                <code className="text-green-400">{'const url = `...?q=${city}&appid=${API_KEY}`'}</code>
                 <p className="text-xs mt-1 opacity-70">Template string - wstawia zmienne do URL</p>
               </div>
               <div className="bg-white/10 rounded p-2">
