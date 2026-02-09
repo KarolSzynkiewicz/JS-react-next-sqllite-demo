@@ -256,13 +256,14 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
     setTimeout(() => {
       setActiveTab(tab);
       
-      const tabNames = {
-        'demo': 'Live Demo',
-        'flowchart': 'Flow Map',
-        'code': 'Code Explorer',
-        'quiz': 'Test Wiedzy',
-        'resources': 'Zasoby'
-      };
+    const tabNames = {
+      'demo': 'Live Demo',
+      'flowchart': 'Flow Map',
+      'code': 'Code Explorer',
+      'quiz': 'Test Wiedzy',
+      'practices': 'Najlepsze Praktyki',
+      'resources': 'Zasoby'
+    };
       
       logAction({
         type: 'function',
@@ -273,6 +274,7 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
           tab === 'flowchart' ? 'Zobacz wizualizację przepływu danych przez cały stack. Kliknij node żeby zobaczyć szczegóły!' :
           tab === 'code' ? 'Przeglądaj kod każdego kroku z wyjaśnieniami line-by-line. Idealny do nauki!' :
           tab === 'quiz' ? 'Sprawdź swoją wiedzę! 10 pytań od beginner do advanced.' :
+          tab === 'practices' ? 'Poznaj najlepsze praktyki programowania: DRY, reużywalne komponenty, czysty kod!' :
           'Kontynuuj naukę z curated resources - oficjalna dokumentacja, tutoriale i więcej!'
         }`,
         currentStep: undefined
