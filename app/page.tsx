@@ -271,10 +271,10 @@ export default function Home() {
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-green-500 transition-all hover:scale-105">
               <div className="text-5xl mb-4">🗄️</div>
               <h3 className="text-2xl font-bold text-white mb-3">
-                CRUD z SQLite
+                CRUD Operations
               </h3>
               <p className="text-white/70 mb-4">
-                Naucz się tworzyć, odczytywać, aktualizować i usuwać dane z bazy
+                Create, Read, Update, Delete - podstawowe operacje na bazie danych
               </p>
               <div className="flex items-center gap-2 text-green-400 font-semibold group-hover:gap-4 transition-all">
                 Praktykuj <span>→</span>
@@ -301,12 +301,12 @@ export default function Home() {
           {/* API Integration */}
           <Link href="/pogoda" className="group">
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-cyan-500 transition-all hover:scale-105">
-              <div className="text-5xl mb-4">🌤️</div>
+              <div className="text-5xl mb-4">🌐</div>
               <h3 className="text-2xl font-bold text-white mb-3">
-                Integracja API
+                API Integration
               </h3>
               <p className="text-white/70 mb-4">
-                Pobieraj dane z zewnętrznych API (przykład: pogoda)
+                Łączenie się z zewnętrznymi API (OpenWeatherMap)
               </p>
               <div className="flex items-center gap-2 text-cyan-400 font-semibold group-hover:gap-4 transition-all">
                 Testuj <span>→</span>
@@ -317,12 +317,12 @@ export default function Home() {
           {/* Database Seeding */}
           <Link href="/lokalizacje" className="group">
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-teal-500 transition-all hover:scale-105">
-              <div className="text-5xl mb-4">📍</div>
+              <div className="text-5xl mb-4">🌱</div>
               <h3 className="text-2xl font-bold text-white mb-3">
                 Seeder & Factory
               </h3>
               <p className="text-white/70 mb-4">
-                Automatycznie generuj testowe dane do bazy
+                Automatyczne wypełnianie bazy danymi testowymi
               </p>
               <div className="flex items-center gap-2 text-teal-400 font-semibold group-hover:gap-4 transition-all">
                 Generuj <span>→</span>

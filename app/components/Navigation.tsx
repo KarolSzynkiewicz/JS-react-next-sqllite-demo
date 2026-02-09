@@ -14,9 +14,9 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: '/', label: 'Start', icon: '🏠', description: 'Strona główna' },
   { href: '/demo', label: 'Platforma', icon: '🚀', description: 'Interactive Learning' },
-  { href: '/produkty', label: 'Produkty', icon: '🗄️', description: 'CRUD Demo' },
-  { href: '/lokalizacje', label: 'Lokalizacje', icon: '📍', description: 'Seeder Demo' },
-  { href: '/pogoda', label: 'Pogoda', icon: '🌤️', description: 'API Demo' },
+  { href: '/produkty', label: 'CRUD', icon: '🗄️', description: 'Create Read Update Delete' },
+  { href: '/lokalizacje', label: 'Seeder', icon: '🌱', description: 'Testowe dane' },
+  { href: '/pogoda', label: 'API', icon: '🌐', description: 'External API Integration' },
 ];
 
 export default function Navigation() {
