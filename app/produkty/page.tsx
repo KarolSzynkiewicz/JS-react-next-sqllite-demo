@@ -1,32 +1,9 @@
-/**
- * STRONA PRODUKTÓW - app/produkty/page.tsx
- * 
- * Ta strona demonstruje operacje CRUD z bazą danych SQLite.
- * 
- * Jak działa komunikacja z API w Next.js:
- * 1. Frontend (Client Component) wysyła requesty do API Routes
- * 2. API Routes (Server-side) komunikują się z bazą danych
- * 3. API zwraca dane jako JSON
- * 4. Frontend aktualizuje UI na podstawie odpowiedzi
- * 
- * CRUD Operations:
- * - CREATE: POST /api/produkty - dodaj nowy produkt
- * - READ: GET /api/produkty - pobierz wszystkie produkty
- * - UPDATE: PUT /api/produkty/[id] - zaktualizuj produkt
- * - DELETE: DELETE /api/produkty/[id] - usuń produkt
- * 
- * "use client" - ten komponent musi być Client Component,
- * ponieważ używa useState, useEffect i event handlers
- */
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import LoadingSpinner, { SkeletonLoader } from '../components/LoadingSpinner';
 
-/**
- * Typ dla produktu (zgodny ze schematem bazy danych)
- */
 interface Produkt {
   id: number;
   nazwa: string;
@@ -35,171 +12,113 @@ interface Produkt {
   utworzono: string;
 }
 
-export default function ProduktyPage() {
-  // State dla listy produktów
+export default function CRUDDemoPage() {
   const [produkty, setProdukty] = useState<Produkt[]>([]);
-  
-  // State dla formularza (dodawanie/edycja)
-  const [formData, setFormData] = useState({
-    nazwa: '',
-    opis: '',
-    cena: ''
-  });
-  
-  // State dla edycji
+  const [formData, setFormData] = useState({ nazwa: '', opis: '', cena: '' });
   const [edytowanyId, setEdytowanyId] = useState<number | null>(null);
-  
-  // State dla komunikatu
   const [wiadomosc, setWiadomosc] = useState<{ typ: 'success' | 'error', tekst: string } | null>(null);
-  
-  // State dla ładowania
   const [ladowanie, setLadowanie] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(true);
 
-  /**
-   * useEffect - wykonuje się po zamontowaniu komponentu
-   * Pobiera produkty z API przy pierwszym załadowaniu strony
-   */
   useEffect(() => {
     pobierzProdukty();
   }, []);
 
-  /**
-   * Funkcja do pobierania wszystkich produktów
-   * GET /api/produkty
-   */
   async function pobierzProdukty() {
     try {
       setLadowanie(true);
       const response = await fetch('/api/produkty');
       const result = await response.json();
-      
       if (result.success) {
         setProdukty(result.data);
       } else {
-        pokazWiadomosc('error', 'Nie udało się pobrać produktów');
+        pokazWiadomosc('error', 'Nie udało się pobrać danych');
       }
     } catch (error) {
       console.error('Błąd:', error);
-      pokazWiadomosc('error', 'Błąd połączenia z serwerem');
+      pokazWiadomosc('error', 'Błąd połączenia');
     } finally {
       setLadowanie(false);
     }
   }
 
-  /**
-   * Funkcja do dodawania nowego produktu
-   * POST /api/produkty
-   */
   async function dodajProdukt(e: React.FormEvent) {
     e.preventDefault();
-    
     try {
       setLadowanie(true);
       const response = await fetch('/api/produkty', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nazwa: formData.nazwa,
           opis: formData.opis || null,
           cena: parseFloat(formData.cena)
         })
       });
-      
       const result = await response.json();
-      
       if (result.success) {
-        pokazWiadomosc('success', 'Produkt został dodany pomyślnie!');
+        pokazWiadomosc('success', '✅ CREATE: Produkt dodany do bazy!');
         setFormData({ nazwa: '', opis: '', cena: '' });
-        pobierzProdukty(); // Odśwież listę
+        pobierzProdukty();
       } else {
-        pokazWiadomosc('error', result.error || 'Nie udało się dodać produktu');
+        pokazWiadomosc('error', result.error || 'Błąd');
       }
     } catch (error) {
-      console.error('Błąd:', error);
-      pokazWiadomosc('error', 'Błąd połączenia z serwerem');
+      pokazWiadomosc('error', 'Błąd połączenia');
     } finally {
       setLadowanie(false);
     }
   }
 
-  /**
-   * Funkcja do aktualizacji produktu
-   * PUT /api/produkty/[id]
-   */
   async function aktualizujProdukt(e: React.FormEvent) {
     e.preventDefault();
-    
     if (!edytowanyId) return;
-    
     try {
       setLadowanie(true);
       const response = await fetch(`/api/produkty/${edytowanyId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nazwa: formData.nazwa,
           opis: formData.opis || null,
           cena: parseFloat(formData.cena)
         })
       });
-      
       const result = await response.json();
-      
       if (result.success) {
-        pokazWiadomosc('success', 'Produkt został zaktualizowany pomyślnie!');
+        pokazWiadomosc('success', '✅ UPDATE: Produkt zaktualizowany!');
         setFormData({ nazwa: '', opis: '', cena: '' });
         setEdytowanyId(null);
-        pobierzProdukty(); // Odśwież listę
+        pobierzProdukty();
       } else {
-        pokazWiadomosc('error', result.error || 'Nie udało się zaktualizować produktu');
+        pokazWiadomosc('error', result.error || 'Błąd');
       }
     } catch (error) {
-      console.error('Błąd:', error);
-      pokazWiadomosc('error', 'Błąd połączenia z serwerem');
+      pokazWiadomosc('error', 'Błąd połączenia');
     } finally {
       setLadowanie(false);
     }
   }
 
-  /**
-   * Funkcja do usuwania produktu
-   * DELETE /api/produkty/[id]
-   */
   async function usunProdukt(id: number) {
-    if (!confirm('Czy na pewno chcesz usunąć ten produkt?')) {
-      return;
-    }
-    
+    if (!confirm('Czy na pewno chcesz usunąć ten produkt?')) return;
     try {
       setLadowanie(true);
-      const response = await fetch(`/api/produkty/${id}`, {
-        method: 'DELETE'
-      });
-      
+      const response = await fetch(`/api/produkty/${id}`, { method: 'DELETE' });
       const result = await response.json();
-      
       if (result.success) {
-        pokazWiadomosc('success', 'Produkt został usunięty pomyślnie!');
-        pobierzProdukty(); // Odśwież listę
+        pokazWiadomosc('success', '✅ DELETE: Produkt usunięty!');
+        pobierzProdukty();
       } else {
-        pokazWiadomosc('error', result.error || 'Nie udało się usunąć produktu');
+        pokazWiadomosc('error', result.error || 'Błąd');
       }
     } catch (error) {
-      console.error('Błąd:', error);
-      pokazWiadomosc('error', 'Błąd połączenia z serwerem');
+      pokazWiadomosc('error', 'Błąd połączenia');
     } finally {
       setLadowanie(false);
     }
   }
 
-  /**
-   * Funkcja do rozpoczęcia edycji produktu
-   * Wypełnia formularz danymi produktu
-   */
   function rozpocznijEdycje(produkt: Produkt) {
     setFormData({
       nazwa: produkt.nazwa,
@@ -209,176 +128,137 @@ export default function ProduktyPage() {
     setEdytowanyId(produkt.id);
   }
 
-  /**
-   * Funkcja do anulowania edycji
-   */
   function anulujEdycje() {
     setFormData({ nazwa: '', opis: '', cena: '' });
     setEdytowanyId(null);
   }
 
-  /**
-   * Funkcja pomocnicza do wyświetlania wiadomości
-   */
   function pokazWiadomosc(typ: 'success' | 'error', tekst: string) {
     setWiadomosc({ typ, tekst });
     setTimeout(() => setWiadomosc(null), 5000);
   }
 
-  /**
-   * STRUKTURA LAYOUTU STRONY - PODZIAŁ NA SEKCJE
-   * 
-   * Ta strona jest podzielona na wyraźne sekcje wizualne:
-   * 
-   * ┌─────────────────────────────────────────────────┐
-   * │ SEKCJA 1: Kontener główny (tło z gradientem)   │
-   * │   ┌───────────────────────────────────────────┐ │
-   * │   │ SEKCJA 2: Kontener treści (max-width)    │ │
-   * │   │   ┌─────────────────────────────────────┐ │ │
-   * │   │   │ SEKCJA 3: Nagłówek + link powrotny │ │ │
-   * │   │   └─────────────────────────────────────┘ │ │
-   * │   │   ┌─────────────────────────────────────┐ │ │
-   * │   │   │ SEKCJA 4: Wiadomość (opcjonalna)   │ │ │
-   * │   │   └─────────────────────────────────────┘ │ │
-   * │   │   ┌─────────────────────────────────────┐ │ │
-   * │   │   │ SEKCJA 5: Grid 2-kolumnowy         │ │ │
-   * │   │   │   ┌──────────┐  ┌──────────┐       │ │ │
-   * │   │   │   │ Formularz│  │ Lista    │       │ │ │
-   * │   │   │   │ (CREATE) │  │ (READ)   │       │ │ │
-   * │   │   │   └──────────┘  └──────────┘       │ │ │
-   * │   │   └─────────────────────────────────────┘ │ │
-   * │   │   ┌─────────────────────────────────────┐ │ │
-   * │   │   │ SEKCJA 6: Dokumentacja/opis         │ │ │
-   * │   │   └─────────────────────────────────────┘ │ │
-   * │   └───────────────────────────────────────────┘ │
-   * └─────────────────────────────────────────────────┘
-   * 
-   * Każda sekcja ma swoje zadanie i jest wyraźnie oddzielona wizualnie.
-   */
-  
   return (
-    /* 
-      SEKCJA 1: KONTENER GŁÓWNY (Outer Container)
-      - min-h-screen: minimalna wysokość = wysokość ekranu (pełna strona)
-      - bg-gradient-to-br: gradient tła od lewego górnego do prawego dolnego rogu
-      - py-12 px-4: padding pionowy i poziomy (odstępy od krawędzi)
-      - dark:... - style dla trybu ciemnego
-    */
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4">
-      {/* 
-        SEKCJA 2: KONTENER TREŚCI (Content Container)
-        - max-w-6xl: maksymalna szerokość (ogranicza szerokość na dużych ekranach)
-        - mx-auto: wyśrodkowanie (margin auto po lewej i prawej)
-        Ten kontener ogranicza szerokość treści dla lepszej czytelności
-      */}
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
         
-        {/* 
-          SEKCJA 3: NAGŁÓWEK I NAWIGACJA
-          - text-center: wyśrodkowanie tekstu
-          - mb-8: margin-bottom (odstęp na dole)
-          - Zawiera tytuł, opis i link powrotny do strony głównej
-        */}
+        {/* Hero Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            🗄️ CRUD z SQLite - Produkty
+          <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
+            🗄️ CRUD Operations Demo
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-            Demonstracja operacji CRUD (Create, Read, Update, Delete) z bazą danych SQLite
+          <p className="text-xl text-white/90 mb-6">
+            Naucz się tworzyć, odczytywać, aktualizować i usuwać dane z bazy SQLite
           </p>
-          {/* 
-            Link nawigacyjny - powrót do strony głównej
-            href="/" - prowadzi do app/page.tsx (strona startowa)
-          */}
           <Link 
             href="/"
-            className="text-indigo-600 dark:text-indigo-400 hover:underline"
+            className="inline-block px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold transition-all"
           >
             ← Powrót do strony głównej
           </Link>
         </div>
 
-        {/* 
-          SEKCJA 4: WIADOMOŚĆ (Message Banner)
-          - Warunkowo renderowana (tylko gdy wiadomosc !== null)
-          - Dynamiczne style w zależności od typu (success/error)
-          - mb-6: margin-bottom (odstęp przed następną sekcją)
-          - Wyświetla komunikaty o sukcesie lub błędzie operacji CRUD
-        */}
+        {/* What is CRUD Explanation */}
+        {showExplanation && (
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 mb-8 relative">
+            <button
+              onClick={() => setShowExplanation(false)}
+              className="absolute top-4 right-4 text-white/70 hover:text-white text-2xl"
+            >
+              ×
+            </button>
+            <div className="flex items-start gap-6">
+              <span className="text-6xl">📚</span>
+              <div className="flex-1 text-white">
+                <h2 className="text-3xl font-black mb-4">Co to jest CRUD?</h2>
+                <p className="text-lg mb-4 opacity-90">
+                  <strong>CRUD</strong> to akronim od 4 podstawowych operacji na bazie danych:
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-2xl mb-2">✏️ <strong>C</strong>reate</div>
+                    <p className="text-sm opacity-80">Dodaj nowy rekord do bazy</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-2xl mb-2">👁️ <strong>R</strong>ead</div>
+                    <p className="text-sm opacity-80">Odczytaj dane z bazy</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-2xl mb-2">🔄 <strong>U</strong>pdate</div>
+                    <p className="text-sm opacity-80">Zaktualizuj istniejący rekord</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-4">
+                    <div className="text-2xl mb-2">🗑️ <strong>D</strong>elete</div>
+                    <p className="text-sm opacity-80">Usuń rekord z bazy</p>
+                  </div>
+                </div>
+                <p className="text-sm mt-4 opacity-80">
+                  💡 <strong>Prawie każda aplikacja używa CRUD!</strong> Facebook, Instagram, Gmail - wszystkie wykonują te operacje.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Message Banner */}
         {wiadomosc && (
-          <div className={`mb-6 p-4 rounded-lg ${
+          <div className={`mb-6 p-4 rounded-2xl border-2 animate-fadeIn ${
             wiadomosc.typ === 'success' 
-              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+              ? 'bg-green-500/20 border-green-500 text-green-300' 
+              : 'bg-red-500/20 border-red-500 text-red-300'
           }`}>
             {wiadomosc.tekst}
           </div>
         )}
 
-        {/* 
-          SEKCJA 5: GŁÓWNA SEKCJA Z GRIDEM (Main Content Grid)
+        {/* Main Grid */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-8">
           
-          Grid Layout - system siatki Tailwind CSS:
-          - grid: włącza CSS Grid
-          - grid-cols-1: 1 kolumna na małych ekranach (mobile-first)
-          - lg:grid-cols-2: 2 kolumny na dużych ekranach (≥1024px)
-          - gap-8: odstęp między kolumnami/wierszami (2rem = 32px)
-          
-          Ten grid dzieli stronę na dwie równe kolumny:
-          - Lewa kolumna: Formularz (CREATE/UPDATE)
-          - Prawa kolumna: Lista produktów (READ)
-          
-          Na małych ekranach kolumny układają się jedna pod drugą (responsive design)
-        */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* 
-            KOLUMNA 1: FORULARZ (Form Section)
-            - bg-white: białe tło (szare w trybie ciemnym)
-            - rounded-lg: zaokrąglone rogi
-            - shadow-lg: duży cień (efekt "uniesienia" karty)
-            - p-6: padding wewnętrzny (odstępy od krawędzi)
-            
-            Ten formularz obsługuje dwie operacje:
-            1. CREATE - dodawanie nowego produktu (gdy edytowanyId === null)
-            2. UPDATE - edycja istniejącego produktu (gdy edytowanyId !== null)
-          */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              {edytowanyId ? '✏️ Edytuj produkt' : '➕ Dodaj nowy produkt'}
-            </h2>
+          {/* Form - CREATE & UPDATE */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-4xl">{edytowanyId ? '🔄' : '✏️'}</span>
+              <h2 className="text-3xl font-bold text-white">
+                {edytowanyId ? 'UPDATE' : 'CREATE'}
+              </h2>
+            </div>
+            <p className="text-white/70 mb-6">
+              {edytowanyId 
+                ? 'Zaktualizuj wybrany produkt w bazie danych' 
+                : 'Dodaj nowy produkt do bazy danych SQLite'}
+            </p>
             
             <form onSubmit={edytowanyId ? aktualizujProdukt : dodajProdukt} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Nazwa produktu *
+                <label className="block text-white font-semibold mb-2">
+                  📝 Nazwa produktu *
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.nazwa}
                   onChange={(e) => setFormData({ ...formData, nazwa: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Np. Laptop Dell"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Np. Laptop Dell XPS"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Opis
+                <label className="block text-white font-semibold mb-2">
+                  📄 Opis (opcjonalnie)
                 </label>
                 <textarea
                   value={formData.opis}
                   onChange={(e) => setFormData({ ...formData, opis: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  placeholder="Opis produktu..."
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Krótki opis produktu..."
                   rows={3}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Cena (PLN) *
+                <label className="block text-white font-semibold mb-2">
+                  💰 Cena (PLN) *
                 </label>
                 <input
                   type="number"
@@ -387,94 +267,95 @@ export default function ProduktyPage() {
                   min="0"
                   value={formData.cena}
                   onChange={(e) => setFormData({ ...formData, cena: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="99.99"
                 />
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
                   type="submit"
                   disabled={ladowanie}
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 transition-all transform hover:scale-105"
                 >
-                  {ladowanie ? '⏳ Przetwarzanie...' : (edytowanyId ? '💾 Zapisz zmiany' : '➕ Dodaj produkt')}
+                  {ladowanie ? '⏳ Zapisywanie...' : (edytowanyId ? '💾 Zapisz zmiany (UPDATE)' : '➕ Dodaj produkt (CREATE)')}
                 </button>
                 
                 {edytowanyId && (
                   <button
                     type="button"
                     onClick={anulujEdycje}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 dark:bg-gray-600 dark:text-white"
+                    className="px-6 py-3 bg-white/10 text-white rounded-xl font-bold hover:bg-white/20 transition-all"
                   >
-                    ❌ Anuluj
+                    ❌
                   </button>
                 )}
               </div>
             </form>
           </div>
 
-          {/* 
-            KOLUMNA 2: LISTA PRODUKTÓW (Products List Section)
-            - Te same style co formularz dla spójności wizualnej
-            - max-h-96: maksymalna wysokość (scroll gdy za dużo produktów)
-            - overflow-y-auto: pionowy scroll gdy zawartość przekracza max-h-96
-            
-            Ta sekcja wyświetla wszystkie produkty z bazy danych (operacja READ)
-            Każdy produkt ma przyciski do edycji (UPDATE) i usunięcia (DELETE)
-          */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              📋 Lista produktów ({produkty.length})
-            </h2>
+          {/* List - READ & DELETE */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/20">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-4xl">📋</span>
+              <h2 className="text-3xl font-bold text-white">
+                READ & DELETE
+              </h2>
+            </div>
+            <p className="text-white/70 mb-6">
+              Lista wszystkich produktów z bazy danych ({produkty.length})
+            </p>
             
             {ladowanie && produkty.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">⏳ Ładowanie...</div>
+              <SkeletonLoader count={3} />
             ) : produkty.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                Brak produktów. Dodaj pierwszy produkt!
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📦</div>
+                <p className="text-white/70 text-lg mb-2">Brak produktów</p>
+                <p className="text-white/50 text-sm">Dodaj pierwszy produkt używając formularza obok →</p>
               </div>
             ) : (
-              <div className="space-y-4 max-h-96 overflow-y-auto">
+              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
                 {produkty.map((produkt) => (
                   <div
                     key={produkt.id}
-                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                    className="p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all animate-fadeIn"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg text-white mb-1">
                           {produkt.nazwa}
                         </h3>
                         {produkt.opis && (
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <p className="text-sm text-white/70">
                             {produkt.opis}
                           </p>
                         )}
                       </div>
-                      <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-                        {produkt.cena.toFixed(2)} PLN
+                      <span className="text-2xl font-bold text-green-400 ml-4">
+                        {produkt.cena.toFixed(2)} zł
                       </span>
                     </div>
                     
-                    <div className="flex gap-2 mt-3">
-                      <button
-                        onClick={() => rozpocznijEdycje(produkt)}
-                        className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-                      >
-                        ✏️ Edytuj
-                      </button>
-                      <button
-                        onClick={() => usunProdukt(produkt.id)}
-                        className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-                      >
-                        🗑️ Usuń
-                      </button>
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+                      <span className="text-xs text-white/40">
+                        ID: {produkt.id} • {new Date(produkt.utworzono).toLocaleString('pl-PL')}
+                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => rozpocznijEdycje(produkt)}
+                          className="px-4 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-all transform hover:scale-105"
+                        >
+                          ✏️ Edytuj
+                        </button>
+                        <button
+                          onClick={() => usunProdukt(produkt.id)}
+                          className="px-4 py-1.5 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-all transform hover:scale-105"
+                        >
+                          🗑️ Usuń
+                        </button>
+                      </div>
                     </div>
-                    
-                    <p className="text-xs text-gray-400 mt-2">
-                      ID: {produkt.id} | Utworzono: {new Date(produkt.utworzono).toLocaleString('pl-PL')}
-                    </p>
                   </div>
                 ))}
               </div>
@@ -482,34 +363,71 @@ export default function ProduktyPage() {
           </div>
         </div>
 
-        {/* 
-          SEKCJA 6: DOKUMENTACJA/WYJAŚNIENIA (Documentation Section)
-          - mt-8: margin-top (odstęp od sekcji powyżej)
-          - Te same style co poprzednie sekcje dla spójności
-          
-          Ta sekcja zawiera wyjaśnienia jak działa CRUD w praktyce.
-          Jest umieszczona na dole strony, poniżej głównego gridu.
-          Pomaga zrozumieć jak działają operacje na bazie danych.
-        */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-            📚 Jak działa CRUD w tym przykładzie?
+        {/* Technical Explanation */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20">
+          <h2 className="text-3xl font-black text-white mb-6 flex items-center gap-3">
+            <span>🔧</span> Jak to działa technicznie?
           </h2>
-          <div className="space-y-3 text-gray-700 dark:text-gray-300">
-            <p>
-              <strong>CREATE (Utwórz):</strong> Formularz wyżej wysyła POST request do <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/api/produkty</code>
-            </p>
-            <p>
-              <strong>READ (Odczytaj):</strong> Lista produktów pobiera dane przez GET request do <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/api/produkty</code>
-            </p>
-            <p>
-              <strong>UPDATE (Aktualizuj):</strong> Przycisk "Edytuj" wypełnia formularz, a zapisanie wysyła PUT request do <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/api/produkty/[id]</code>
-            </p>
-            <p>
-              <strong>DELETE (Usuń):</strong> Przycisk "Usuń" wysyła DELETE request do <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/api/produkty/[id]</code>
-            </p>
-            <p className="mt-4 text-sm">
-              💡 Wszystkie operacje są wykonywane na bazie danych SQLite (plik <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">database.db</code> w katalogu projektu)
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-purple-500/20 rounded-xl p-5 border-l-4 border-purple-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">✏️</span>
+                <h3 className="text-xl font-bold text-purple-300">CREATE (POST)</h3>
+              </div>
+              <code className="text-sm text-white/70 block mb-2">
+                POST /api/produkty
+              </code>
+              <p className="text-sm text-white/80">
+                Frontend wysyła dane → API Route → SQLite INSERT → Nowy rekord w bazie
+              </p>
+            </div>
+
+            <div className="bg-blue-500/20 rounded-xl p-5 border-l-4 border-blue-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">👁️</span>
+                <h3 className="text-xl font-bold text-blue-300">READ (GET)</h3>
+              </div>
+              <code className="text-sm text-white/70 block mb-2">
+                GET /api/produkty
+              </code>
+              <p className="text-sm text-white/80">
+                Frontend fetchuje → API Route → SQLite SELECT → Zwraca listę produktów
+              </p>
+            </div>
+
+            <div className="bg-green-500/20 rounded-xl p-5 border-l-4 border-green-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">🔄</span>
+                <h3 className="text-xl font-bold text-green-300">UPDATE (PUT)</h3>
+              </div>
+              <code className="text-sm text-white/70 block mb-2">
+                PUT /api/produkty/[id]
+              </code>
+              <p className="text-sm text-white/80">
+                Frontend wysyła zmiany → API Route → SQLite UPDATE → Rekord zaktualizowany
+              </p>
+            </div>
+
+            <div className="bg-red-500/20 rounded-xl p-5 border-l-4 border-red-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">🗑️</span>
+                <h3 className="text-xl font-bold text-red-300">DELETE (DELETE)</h3>
+              </div>
+              <code className="text-sm text-white/70 block mb-2">
+                DELETE /api/produkty/[id]
+              </code>
+              <p className="text-sm text-white/80">
+                Frontend potwierdza → API Route → SQLite DELETE → Rekord usunięty
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 bg-yellow-500/20 rounded-xl p-5 border border-yellow-500/50">
+            <strong className="text-yellow-300">💡 Pro Tip:</strong>
+            <p className="text-white/80 mt-2">
+              CRUD to fundament większości aplikacji webowych. Zrozumienie tych 4 operacji 
+              pozwoli Ci budować prawie wszystko - od todo list po sklepy internetowe!
             </p>
           </div>
         </div>
