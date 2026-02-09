@@ -79,32 +79,40 @@ const produkt3 = {
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">🔍 Krok 3: Sprawdzanie właściwości (properties)</h3>
+            <h3 className="text-2xl font-bold mb-4">🔍 Krok 3: Używanie właściwości w kodzie</h3>
             <p className="mb-3 text-base">
-              Gdy masz obiekt, możesz <strong>sprawdzać jego właściwości</strong> (properties):
+              Gdy masz obiekt, możesz <strong>używać jego właściwości</strong> w kodzie:
             </p>
-            <pre className="bg-black/50 rounded p-4 text-sm">
-              <code className="text-purple-400">{`// Pobierz produkt z bazy (Prisma automatycznie mapuje na obiekt)
-const produkt = await prisma.produkt.findUnique({
+            <p className="text-sm mb-2">Pobierz produkt z bazy:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-purple-400">{`const produkt = await prisma.produkt.findUnique({
   where: { id: 1 }
-});
-
-// Sprawdzaj właściwości obiektu:
-console.log(produkt.id);      // 1
-console.log(produkt.nazwa);  // "Laptop"
-console.log(produkt.opis);   // "Super laptop"
-console.log(produkt.cena);   // 1000
-
-// Możesz używać właściwości w kodzie:
-if (produkt.cena > 500) {
-  console.log("Drogi produkt!");
-}
-
-const pelnaNazwa = produkt.nazwa + " - " + produkt.cena + " zł";
-// "Laptop - 1000 zł"`}</code>
+});`}</code>
             </pre>
-            <p className="text-sm mt-3 opacity-80">
-              <strong>Properties</strong> = właściwości obiektu. To są dane które możesz odczytać i używać w kodzie!
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Prisma automatycznie mapuje wiersz z tabeli na obiekt JavaScript
+            </p>
+
+            <p className="text-sm mb-2">Użyj właściwości w widoku (komponencie):</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-purple-400">{`export default function ProduktPage() {
+  const produkt = await prisma.produkt.findUnique({
+    where: { id: 1 }
+  });
+  
+  const nazwa = produkt.nazwa;
+  const cena = produkt.cena;
+  
+  return (
+    <div>
+      <h1>{nazwa}</h1>
+      <p>Cena: {cena} zł</p>
+    </div>
+  );
+}`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              Przypisujesz właściwości do zmiennych i używasz w widoku - to jest życiowy przykład!
             </p>
           </div>
 
@@ -213,113 +221,6 @@ prisma.produkt.delete()      // Usuń produkt`}</code>
       )
     },
     {
-      id: 'model-config-file',
-      title: 'Config File - Jak zmienić bazę danych?',
-      icon: '⚙️',
-      content: (
-        <div className="space-y-6">
-          <p className="text-xl">
-            Dzięki <strong className="text-blue-400">config file</strong> możesz <strong>zmienić bazę danych 
-            bez zmiany kodu</strong>! To bardzo przydatne.
-          </p>
-
-          <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">📋 Config File 1: schema.prisma</h3>
-            <p className="mb-3 text-base">
-              Plik <code className="bg-black/30 px-2 py-1 rounded">prisma/schema.prisma</code> definiuje 
-              <strong> jak wyglądają modele</strong> (jakie kolumny ma tabela):
-            </p>
-            <pre className="bg-black/50 rounded p-4 text-sm">
-              <code className="text-green-400">{`// prisma/schema.prisma
-
-// Konfiguracja bazy danych
-datasource db {
-  provider = "sqlite"        // Typ bazy: sqlite, postgresql, mysql
-  url      = env("DATABASE_URL")  // URL do bazy (z pliku .env)
-}
-
-// MODEL - definicja tabeli "produkty"
-model Produkt {
-  id        Int      @id @default(autoincrement())
-  nazwa     String
-  opis      String?
-  cena      Float
-  utworzono DateTime @default(now())
-}
-
-// MODEL - definicja tabeli "zamowienia"
-model Zamowienie {
-  id         Int      @id @default(autoincrement())
-  produktId  Int
-  ilosc      Int
-  utworzono  DateTime @default(now())
-}`}</code>
-            </pre>
-            <p className="text-sm mt-3 opacity-80">
-              <strong>schema.prisma</strong> = definicja modeli. Mówi Prisma jak wyglądają tabele w bazie.
-            </p>
-          </div>
-
-          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
-            <h3 className="text-2xl font-bold mb-4">🔑 Config File 2: .env (DATABASE_URL)</h3>
-            <p className="mb-3 text-base">
-              Plik <code className="bg-black/30 px-2 py-1 rounded">.env</code> zawiera <strong>URL do bazy danych</strong>:
-            </p>
-            <div className="space-y-3">
-              <div className="bg-white/10 rounded p-4">
-                <p className="text-sm mb-2"><strong>Dla SQLite (lokalna baza plikowa):</strong></p>
-                <pre className="bg-black/50 rounded p-2 text-xs">
-                  <code className="text-green-400">DATABASE_URL="file:./database.db"</code>
-                </pre>
-              </div>
-              <div className="bg-white/10 rounded p-4">
-                <p className="text-sm mb-2"><strong>Dla PostgreSQL (serwer bazy danych):</strong></p>
-                <pre className="bg-black/50 rounded p-2 text-xs">
-                  <code className="text-green-400">DATABASE_URL="postgresql://user:password@localhost:5432/mydb"</code>
-                </pre>
-              </div>
-              <div className="bg-white/10 rounded p-4">
-                <p className="text-sm mb-2"><strong>Dla MySQL:</strong></p>
-                <pre className="bg-black/50 rounded p-2 text-xs">
-                  <code className="text-green-400">DATABASE_URL="mysql://user:password@localhost:3306/mydb"</code>
-                </pre>
-              </div>
-            </div>
-            <p className="text-sm mt-3 opacity-80">
-              <strong>DATABASE_URL</strong> = adres bazy danych. Zmieniasz tylko ten URL, a kod zostaje taki sam!
-            </p>
-          </div>
-
-          <div className="bg-purple-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🔄 Jak zmienić bazę danych?</h4>
-            <div className="space-y-3 text-sm">
-              <div className="bg-white/10 rounded p-3">
-                <strong>Krok 1:</strong> Zmień <code className="bg-black/30 px-1 rounded">provider</code> w schema.prisma
-                <p className="text-xs mt-1 opacity-70">Z "sqlite" na "postgresql" lub "mysql"</p>
-              </div>
-              <div className="bg-white/10 rounded p-3">
-                <strong>Krok 2:</strong> Zmień <code className="bg-black/30 px-1 rounded">DATABASE_URL</code> w .env
-                <p className="text-xs mt-1 opacity-70">Podaj URL do nowej bazy danych</p>
-              </div>
-              <div className="bg-white/10 rounded p-3">
-                <strong>Krok 3:</strong> Uruchom <code className="bg-black/30 px-1 rounded">npx prisma migrate dev</code>
-                <p className="text-xs mt-1 opacity-70">Prisma stworzy tabele w nowej bazie</p>
-              </div>
-              <div className="bg-white/10 rounded p-3">
-                <strong>Gotowe!</strong> Kod zostaje taki sam - tylko zmieniłeś config files!
-                <p className="text-xs mt-1 opacity-70">Wszystkie metody (findMany, create, etc.) działają tak samo!</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 To jest siła Repository Pattern!</strong> Kod nie wie jaka to baza - tylko używa metod. 
-            Zmieniasz bazę przez config files, a kod zostaje taki sam!
-          </div>
-        </div>
-      )
-    },
-    {
       id: 'why-prisma',
       title: 'Dlaczego Prisma?',
       icon: '⭐',
@@ -327,7 +228,7 @@ model Zamowienie {
         <div className="space-y-6">
           <p className="text-xl">
             <strong className="text-blue-400">Prisma</strong> to najpopularniejszy ORM dla TypeScript. 
-            Ma <strong>modele jak Laravel</strong> i <strong>proste API</strong>!
+            Ma <strong>proste modele</strong> i <strong>czytelne API</strong>!
           </p>
 
           <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl p-6 border-2 border-blue-500/50">
@@ -346,7 +247,7 @@ model Zamowienie {
               </div>
               <div className="bg-white/10 rounded p-3 text-center">
                 <div className="text-2xl mb-1">🎯</div>
-                <strong>Laravel-like API</strong>
+                <strong>Proste API</strong>
                 <p className="text-xs opacity-70 mt-1">findMany(), findUnique()</p>
               </div>
               <div className="bg-white/10 rounded p-3 text-center">
@@ -450,52 +351,92 @@ npx prisma migrate dev --name init`}</code>
     },
     {
       id: 'models-schema',
-      title: 'Modele - Definiowanie w schema.prisma',
+      title: 'Jak zdefiniować model? - Mapowanie kolumn na properties',
       icon: '📋',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-blue-400">Modele</strong> definiujesz w pliku 
-            <code className="bg-black/30 px-2 py-1 rounded">prisma/schema.prisma</code>. 
-            To jak <strong>migracje w Laravel</strong>!
+            <strong className="text-blue-400">Model</strong> to definicja tabeli. Mówisz Prisma jakie kolumny 
+            ma tabela, a Prisma mapuje to na obiekt JavaScript z właściwościami.
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">🎯 Jak działa mapowanie?</h3>
+            <p className="mb-3 text-base">
+              <strong>Model ma properties</strong> (właściwości), <strong>tabela ma kolumny</strong>. 
+              Prisma łączy je automatycznie:
+            </p>
+            <div className="bg-white/10 rounded p-4">
+              <p className="text-sm mb-2"><strong>W modelu definiujesz:</strong></p>
+              <pre className="bg-black/50 rounded p-3 text-xs">
+                <code className="text-green-400">{`model Produkt {
+  id    Int
+  nazwa String
+  cena  Float
+}`}</code>
+              </pre>
+              <p className="text-xs mt-2 mb-3 opacity-70">
+                To mówi Prisma: "Tabela produkty ma kolumny: id, nazwa, cena"
+              </p>
+
+              <p className="text-sm mb-2"><strong>W kodzie używasz properties:</strong></p>
+              <pre className="bg-black/50 rounded p-3 text-xs">
+                <code className="text-green-400">{`const produkt = await prisma.produkt.findUnique({
+  where: { id: 1 }
+});
+
+const nazwa = produkt.nazwa;  // Właściwość "nazwa"
+const cena = produkt.cena;    // Właściwość "cena"`}</code>
+              </pre>
+              <p className="text-xs mt-2 opacity-70">
+                Prisma automatycznie mapuje kolumnę "nazwa" z tabeli na właściwość produkt.nazwa w obiekcie!
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">📄 Wszystkie modele w jednym pliku</h3>
+            <p className="mb-3 text-base">
+              W Prisma <strong>wszystkie modele są w jednym pliku</strong>: 
+              <code className="bg-black/30 px-2 py-1 rounded">prisma/schema.prisma</code>
+            </p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`model Produkt {
+  id    Int    @id
+  nazwa String
+  cena  Float
+}
+
+model Uzytkownik {
+  id   Int    @id
+  imie String
+}
+
+model Zamowienie {
+  id         Int    @id
+  produktId Int
+}`}</code>
+            </pre>
+            <p className="text-sm mt-3">
+              <strong>Zalety:</strong> Wszystko w jednym miejscu, łatwo znaleźć, łatwo zmienić config (o tym później)
+            </p>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
             <h3 className="text-2xl font-bold mb-4">📋 Przykład: prisma/schema.prisma</h3>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`// Konfiguracja bazy danych
-datasource db {
-  provider = "sqlite"
-  url      = "file:./database.db"
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-// MODEL - reprezentuje tabelę "produkty"
-model Produkt {
+            <p className="text-sm mb-2">Model Produkt:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`model Produkt {
   id        Int      @id @default(autoincrement())
   nazwa     String
   opis      String?
   cena      Float
   utworzono DateTime @default(now())
-  
-  // Relacja: jeden produkt ma wiele zamówień
-  zamowienia Zamowienie[]
-}
-
-// MODEL - reprezentuje tabelę "zamowienia"
-model Zamowienie {
-  id         Int      @id @default(autoincrement())
-  produktId  Int
-  ilosc      Int
-  utworzono  DateTime @default(now())
-  
-  // Relacja: zamówienie należy do produktu
-  produkt    Produkt  @relation(fields: [produktId], references: [id])
 }`}</code>
             </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              To definicja tabeli "produkty" z kolumnami: id, nazwa, opis, cena, utworzono
+            </p>
           </div>
 
           <div className="bg-purple-500/20 rounded-xl p-6">
@@ -691,14 +632,29 @@ uzytkownik.posty[0].tytul  // Tytuł pierwszego posta`}</code>
               <strong>include: {`{ posty: true }`}</strong> = załaduj posty tego użytkownika
             </p>
 
-            <p className="text-sm mb-3">Sprawdź dane:</p>
+            <p className="text-sm mb-3">Użyj danych w widoku:</p>
             <pre className="bg-black/50 rounded p-3 text-xs">
-              <code className="text-green-400">{`console.log(uzytkownik.imie);         // "Jan"
-console.log(uzytkownik.posty.length);  // 5
-console.log(uzytkownik.posty[0].tytul);// "Mój pierwszy post"`}</code>
+              <code className="text-green-400">{`export default function UzytkownikPage() {
+  const uzytkownik = await prisma.uzytkownik.findUnique({
+    where: { id: 1 },
+    include: { posty: true }
+  });
+  
+  const imie = uzytkownik.imie;
+  const liczbaPostow = uzytkownik.posty.length;
+  const pierwszyPost = uzytkownik.posty[0];
+  
+  return (
+    <div>
+      <h1>{imie}</h1>
+      <p>Liczba postów: {liczbaPostow}</p>
+      <p>Ostatni post: {pierwszyPost.tytul}</p>
+    </div>
+  );
+}`}</code>
             </pre>
             <p className="text-xs mt-2 opacity-70">
-              Masz obiekt użytkownika z tablicą postów - proste!
+              Przypisujesz właściwości do zmiennych i używasz w widoku - to jest życiowy przykład!
             </p>
           </div>
 
@@ -815,96 +771,87 @@ console.log(uzytkownik.posty[0].tytul);// "Mój pierwszy post"`}</code>
       )
     },
     {
-      id: 'laravel-like-api',
-      title: 'API jak Laravel - findMany, findUnique',
+      id: 'prisma-api',
+      title: 'Prisma API - Podstawowe metody',
       icon: '🎯',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
             Prisma ma <strong className="text-purple-400">proste i czytelne API</strong>! 
-            <code>findMany()</code> = <code>all()</code>, <code>findUnique()</code> = <code>find()</code>!
+            Zamiast pisać SQL, używasz prostych metod.
           </p>
 
-          <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl p-6 border-2 border-purple-500/50">
-            <h3 className="text-2xl font-bold mb-4">🔄 Porównanie: Laravel vs Prisma</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-green-500/20 rounded p-4">
-                <h4 className="text-lg font-bold mb-2 text-green-400">✅ Laravel/PHP</h4>
-                <pre className="bg-black/50 rounded p-3 text-xs">
-                  <code className="text-green-400">{`// Wszystkie
-Produkt::all();
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📋 Podstawowe metody</h3>
+            <p className="text-sm mb-2">Pobierz wszystkie produkty:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-blue-400">{`const produkty = await prisma.produkt.findMany();`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Zwraca tablicę wszystkich produktów
+            </p>
 
-// Jeden po ID
-Produkt::find(1);
-
-// Where
-Produkt::where('cena', '>', 100)
-  ->get();
-
-// Create
-Produkt::create([
-  'nazwa' => 'Laptop',
-  'cena' => 2999
-]);
-
-// Update
-Produkt::find(1)
-  ->update(['cena' => 2499]);
-
-// Delete
-Produkt::find(1)->delete();`}</code>
-                </pre>
-              </div>
-
-              <div className="bg-blue-500/20 rounded p-4">
-                <h4 className="text-lg font-bold mb-2 text-blue-400">✅ Prisma/TypeScript</h4>
-                <pre className="bg-black/50 rounded p-3 text-xs">
-                  <code className="text-blue-400">{`// Wszystkie
-await prisma.produkt.findMany();
-
-// Jeden po ID
-await prisma.produkt.findUnique({
+            <p className="text-sm mb-2">Znajdź produkt po ID:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-blue-400">{`const produkt = await prisma.produkt.findUnique({
   where: { id: 1 }
-});
+});`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Zwraca jeden produkt lub null jeśli nie istnieje
+            </p>
 
-// Where
-await prisma.produkt.findMany({
+            <p className="text-sm mb-2">Znajdź produkty z warunkiem:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-blue-400">{`const drogie = await prisma.produkt.findMany({
   where: { cena: { gt: 100 } }
-});
+});`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              Znajduje produkty droższe niż 100
+            </p>
+          </div>
 
-// Create
-await prisma.produkt.create({
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">✏️ Tworzenie, aktualizacja, usuwanie</h3>
+            <p className="text-sm mb-2">Dodaj nowy produkt:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`const nowy = await prisma.produkt.create({
   data: {
     nazwa: 'Laptop',
     cena: 2999
   }
-});
+});`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Tworzy nowy produkt w bazie
+            </p>
 
-// Update
-await prisma.produkt.update({
+            <p className="text-sm mb-2">Zaktualizuj produkt:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`await prisma.produkt.update({
   where: { id: 1 },
   data: { cena: 2499 }
-});
+});`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              Zmienia cenę produktu o ID 1
+            </p>
 
-// Delete
-await prisma.produkt.delete({
+            <p className="text-sm mb-2">Usuń produkt:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`await prisma.produkt.delete({
   where: { id: 1 }
 });`}</code>
-                </pre>
-              </div>
-            </div>
-            <p className="text-sm mt-4 text-center">
-              <strong>Prawie identyczne!</strong> Tylko składnia TypeScript zamiast PHP 🎯
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              Usuwa produkt o ID 1 z bazy
             </p>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>💡 Różnice:</strong>
-            <ul className="text-sm mt-2 space-y-1">
-              <li>• Laravel: <code className="bg-black/30 px-1 rounded">all()</code> → Prisma: <code className="bg-black/30 px-1 rounded">findMany()</code></li>
-              <li>• Laravel: <code className="bg-black/30 px-1 rounded">find(1)</code> → Prisma: <code className="bg-black/30 px-1 rounded">{'findUnique({where: {id: 1}})'}</code></li>
-              <li>• Laravel: <code className="bg-black/30 px-1 rounded">{'where(\'cena\', \'>\', 100)'}</code> → Prisma: <code className="bg-black/30 px-1 rounded">{'where: {cena: {gt: 100}}'}</code></li>
-            </ul>
+            <strong>💡 Pamiętaj:</strong> Wszystkie metody zwracają obiekty JavaScript z właściwościami. 
+            Zamiast SQL, działasz na obiektach!
           </div>
         </div>
       )
@@ -1146,187 +1093,236 @@ await prisma.produkt.deleteMany({});`}</code>
       )
     },
     {
-      id: 'final-implementation',
-      title: 'Finalna implementacja w API Routes',
+      id: 'final-implementation-get',
+      title: 'API Route - GET (Pobierz wszystkie)',
       icon: '🚀',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            Zobacz jak używać <strong className="text-purple-400">Prisma w API Routes</strong> - 
-            finalna implementacja!
+            Zobacz jak używać <strong className="text-purple-400">Prisma w API Routes</strong>! 
+            Zacznijmy od pobierania wszystkich produktów.
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">💻 app/api/produkty/route.ts</h4>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+            <h3 className="text-2xl font-bold mb-4">📍 Plik: app/api/produkty/route.ts</h3>
+            <p className="text-sm mb-2"><strong>Use case:</strong> Chcesz pobrać wszystkie produkty z bazy</p>
+            
+            <p className="text-sm mb-2">Krok 1: Import</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';`}</code>
+            </pre>
+            <p className="text-xs mt-1 mb-3 opacity-70">
+              Importujesz Next.js API Route i prisma z lib/prisma.ts
+            </p>
 
-// GET /api/produkty
-export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const minCena = searchParams.get('minCena');
-    
-    // Prisma query - krótkie i czytelne!
-    const produkty = await prisma.produkt.findMany({
-      where: minCena 
-        ? { cena: { gte: parseFloat(minCena) } }
-        : {},
-      orderBy: { utworzono: 'desc' },
-      include: {
-        zamowienia: {
-          _count: true  // Liczba zamówień
-        }
-      }
-    });
-    
-    return NextResponse.json({
-      success: true,
-      data: produkty
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Błąd pobierania produktów' },
-      { status: 500 }
-    );
-  }
-}
-
-// POST /api/produkty
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { nazwa, opis, cena } = body;
-    
-    // Walidacja
-    if (!nazwa || !cena) {
-      return NextResponse.json(
-        { success: false, error: 'Nazwa i cena są wymagane' },
-        { status: 400 }
-      );
-    }
-    
-    // Prisma create - super proste!
-    const nowy = await prisma.produkt.create({
-      data: {
-        nazwa,
-        opis: opis || null,
-        cena: parseFloat(cena)
-      }
-    });
-    
-    return NextResponse.json({
-      success: true,
-      data: nowy
-    }, { status: 201 });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Błąd tworzenia produktu' },
-      { status: 500 }
-    );
-  }
+            <p className="text-sm mb-2">Krok 2: Funkcja GET</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`export async function GET(request: NextRequest) {
+  const produkty = await prisma.produkt.findMany();
+  
+  return NextResponse.json({
+    success: true,
+    data: produkty
+  });
 }`}</code>
             </pre>
+            <p className="text-xs mt-1 mb-3 opacity-70">
+              findMany() pobiera wszystkie produkty. Zwracasz je jako JSON.
+            </p>
           </div>
 
           <div className="bg-green-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">💻 app/api/produkty/[id]/route.ts</h4>
-            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
-              <code className="text-green-400">{`import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+            <h3 className="text-2xl font-bold mb-4">💡 Z filtrowaniem</h3>
+            <p className="text-sm mb-2">Jeśli chcesz filtrować (np. tylko drogie produkty):</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-green-400">{`const produkty = await prisma.produkt.findMany({
+  where: { cena: { gt: 100 } },
+  orderBy: { utworzono: 'desc' }
+});`}</code>
+            </pre>
+            <p className="text-xs mt-1 opacity-70">
+              where = warunki filtrowania, orderBy = sortowanie
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'final-implementation-post',
+      title: 'API Route - POST (Dodaj nowy)',
+      icon: '🚀',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Teraz <strong className="text-purple-400">dodawanie nowego produktu</strong> do bazy.
+          </p>
 
-// GET /api/produkty/[id]
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    const produkt = await prisma.produkt.findUnique({
-      where: { id: parseInt(id) },
-      include: {
-        zamowienia: true  // Załaduj relację!
-      }
-    });
-    
-    if (!produkt) {
-      return NextResponse.json(
-        { success: false, error: 'Produkt nie znaleziony' },
-        { status: 404 }
-      );
-    }
-    
-    return NextResponse.json({ success: true, data: produkt });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Błąd pobierania produktu' },
-      { status: 500 }
-    );
-  }
-}
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📍 Plik: app/api/produkty/route.ts</h3>
+            <p className="text-sm mb-2"><strong>Use case:</strong> Chcesz dodać nowy produkt do bazy</p>
+            
+            <p className="text-sm mb-2">Krok 1: Pobierz dane z requestu</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { nazwa, opis, cena } = body;`}</code>
+            </pre>
+            <p className="text-xs mt-1 mb-3 opacity-70">
+              Pobierasz dane z body requestu (JSON)
+            </p>
 
-// PUT /api/produkty/[id]
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    const body = await request.json();
-    
-    const zaktualizowany = await prisma.produkt.update({
-      where: { id: parseInt(id) },
-      data: body
-    });
-    
-    return NextResponse.json({ success: true, data: zaktualizowany });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Błąd aktualizacji' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/produkty/[id]
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    await prisma.produkt.delete({
-      where: { id: parseInt(id) }
-    });
-    
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Błąd usuwania' },
-      { status: 500 }
-    );
-  }
+            <p className="text-sm mb-2">Krok 2: Walidacja</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`if (!nazwa || !cena) {
+  return NextResponse.json(
+    { success: false, error: 'Nazwa i cena są wymagane' },
+    { status: 400 }
+  );
 }`}</code>
             </pre>
+            <p className="text-xs mt-1 mb-3 opacity-70">
+              Sprawdzasz czy wymagane pola są wypełnione
+            </p>
+
+            <p className="text-sm mb-2">Krok 3: Dodaj do bazy</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`const nowy = await prisma.produkt.create({
+  data: {
+    nazwa,
+    opis: opis || null,
+    cena: parseFloat(cena)
+  }
+});
+
+return NextResponse.json({
+  success: true,
+  data: nowy
+}, { status: 201 });`}</code>
+            </pre>
+            <p className="text-xs mt-1 opacity-70">
+              create() dodaje nowy produkt. Zwracasz go jako JSON z statusem 201 (Created)
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'final-implementation-get-id',
+      title: 'API Route - GET [id] (Pobierz jeden)',
+      icon: '🚀',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Pobieranie <strong className="text-purple-400">jednego produktu po ID</strong>.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📍 Plik: app/api/produkty/[id]/route.ts</h3>
+            <p className="text-sm mb-2"><strong>Use case:</strong> Chcesz pobrać produkt o konkretnym ID</p>
+            
+            <p className="text-sm mb-2">Krok 1: Pobierz ID z URL</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;`}</code>
+            </pre>
+            <p className="text-xs mt-1 mb-3 opacity-70">
+              params zawiera ID z URL (np. /api/produkty/1 → id = "1")
+            </p>
+
+            <p className="text-sm mb-2">Krok 2: Pobierz produkt z bazy</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`const produkt = await prisma.produkt.findUnique({
+  where: { id: parseInt(id) },
+  include: { zamowienia: true }
+});`}</code>
+            </pre>
+            <p className="text-xs mt-1 mb-3 opacity-70">
+              findUnique() znajduje produkt po ID. include załaduje relację zamowienia.
+            </p>
+
+            <p className="text-sm mb-2">Krok 3: Sprawdź czy istnieje</p>
+            <pre className="bg-black/50 rounded p-2 text-xs">
+              <code className="text-blue-400">{`if (!produkt) {
+  return NextResponse.json(
+    { success: false, error: 'Produkt nie znaleziony' },
+    { status: 404 }
+  );
+}
+
+return NextResponse.json({ success: true, data: produkt });`}</code>
+            </pre>
+            <p className="text-xs mt-1 opacity-70">
+              Jeśli produkt nie istnieje, zwróć 404. W przeciwnym razie zwróć produkt.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'final-implementation-put-delete',
+      title: 'API Route - PUT i DELETE',
+      icon: '🚀',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            <strong className="text-purple-400">Aktualizacja i usuwanie</strong> produktów.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">✏️ PUT - Zaktualizuj produkt</h3>
+            <p className="text-sm mb-2"><strong>Use case:</strong> Chcesz zmienić dane produktu</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-blue-400">{`export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const body = await request.json();
+  
+  const zaktualizowany = await prisma.produkt.update({
+    where: { id: parseInt(id) },
+    data: body
+  });
+  
+  return NextResponse.json({ success: true, data: zaktualizowany });
+}`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              update() zmienia dane produktu. where = który produkt, data = nowe dane.
+            </p>
           </div>
 
-          <div className="bg-purple-500/20 rounded-xl p-6">
-            <h4 className="text-xl font-bold mb-3">🎯 Co widzisz?</h4>
-            <ul className="space-y-2 text-sm">
-              <li>✓ <strong>Krótki kod</strong> - zamiast długich SQL queries</li>
-              <li>✓ <strong>Type-safe</strong> - TypeScript sprawdza wszystko</li>
-              <li>✓ <strong>Relacje</strong> - łatwo załadować powiązane dane</li>
-              <li>✓ <strong>Czytelne</strong> - kod mówi co robi</li>
-              <li>✓ <strong>Laravel-like</strong> - jeśli znasz Laravel, Prisma jest intuicyjna!</li>
-            </ul>
+          <div className="bg-red-500/20 rounded-xl p-6 border-2 border-red-500/50">
+            <h3 className="text-2xl font-bold mb-4">🗑️ DELETE - Usuń produkt</h3>
+            <p className="text-sm mb-2"><strong>Use case:</strong> Chcesz usunąć produkt z bazy</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-red-400">{`export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  
+  await prisma.produkt.delete({
+    where: { id: parseInt(id) }
+  });
+  
+  return NextResponse.json({ success: true });
+}`}</code>
+            </pre>
+            <p className="text-xs mt-2 opacity-70">
+              delete() usuwa produkt z bazy. where = który produkt usunąć.
+            </p>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
             <strong>💡 To jest finalna implementacja!</strong>
             <p className="text-sm mt-2">
               Zamiast pisać SQL ręcznie, używasz Prisma która generuje SQL za Ciebie. 
-              Kod jest krótszy, bezpieczniejszy i łatwiejszy w utrzymaniu!
+              Kod jest krótszy i łatwiejszy w utrzymaniu!
             </p>
           </div>
         </div>
@@ -1339,12 +1335,33 @@ export async function DELETE(
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-blue-400">Migracje</strong> w Prisma działają jak w Laravel! 
+            <strong className="text-blue-400">Migracje</strong> to sposób na zmiany w bazie danych. 
             Zmieniasz model → Prisma tworzy migrację → aplikujesz migrację!
           </p>
 
           <div className="bg-blue-500/20 rounded-xl p-6">
-            <h3 className="text-2xl font-bold mb-4">🔄 Workflow migracji</h3>
+            <h3 className="text-2xl font-bold mb-4">🤔 Co to jest migracja i po co istnieje?</h3>
+            <p className="mb-3 text-base">
+              <strong>Problem:</strong> Gdy zmieniasz model (np. dodajesz kolumnę), musisz też zmienić tabelę w bazie. 
+              Ale jak to zrobić bezpiecznie?
+            </p>
+            <p className="mb-3 text-base">
+              <strong>Rozwiązanie:</strong> <strong>Migracja</strong> to plik SQL który mówi bazie "dodaj kolumnę kategoria". 
+              Prisma tworzy ten plik automatycznie!
+            </p>
+            <div className="bg-white/10 rounded p-4 text-sm">
+              <p className="mb-2"><strong>Zalety migracji:</strong></p>
+              <ul className="space-y-1 ml-4">
+                <li>• Historia zmian - widzisz co się zmieniło w bazie</li>
+                <li>• Bezpieczeństwo - możesz cofnąć zmiany</li>
+                <li>• Automatyzacja - Prisma tworzy SQL za Ciebie</li>
+                <li>• Współpraca - zespół ma te same zmiany</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔄 Jak to działa krok po kroku?</h3>
             <div className="space-y-4">
               <div className="bg-white/10 rounded-xl p-5">
                 <div className="flex items-center gap-3 mb-3">
@@ -1416,6 +1433,135 @@ model Produkt {
           <div className="bg-purple-500/20 rounded-xl p-4">
             <strong>💡 Tip:</strong> Migracje są zapisywane w <code className="bg-black/30 px-2 py-1 rounded">prisma/migrations/</code>. 
             Commituj je do Git - to historia zmian w bazie!
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'config-files',
+      title: 'Config Files - Jak skonfigurować bazę?',
+      icon: '⚙️',
+      content: (
+        <div className="space-y-6">
+          <p className="text-xl">
+            Dzięki <strong className="text-blue-400">config files</strong> możesz <strong>zmienić bazę danych 
+            bez zmiany kodu</strong>! To bardzo przydatne.
+          </p>
+
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">📄 Wszystkie modele w jednym pliku</h3>
+            <p className="mb-3 text-base">
+              W Prisma <strong>wszystkie modele są w jednym pliku</strong>: 
+              <code className="bg-black/30 px-2 py-1 rounded">prisma/schema.prisma</code>
+            </p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`model Produkt {
+  id    Int    @id
+  nazwa String
+}
+
+model Uzytkownik {
+  id   Int    @id
+  imie String
+}
+
+// ... i tak dalej, nawet 300 modeli!`}</code>
+            </pre>
+            <p className="text-sm mt-3">
+              <strong>Zalety:</strong> Wszystko w jednym miejscu, łatwo znaleźć, łatwo zmienić config
+            </p>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+            <h3 className="text-2xl font-bold mb-4">⚙️ Config na górze pliku (tylko raz!)</h3>
+            <p className="mb-3 text-base">
+              W pliku <code className="bg-black/30 px-2 py-1 rounded">schema.prisma</code> config jest 
+              <strong> tylko raz na górze</strong>, a wszystkie modele poniżej:
+            </p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-green-400">{`datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Produkt {
+  id    Int    @id
+  nazwa String
+}
+
+model Uzytkownik {
+  id   Int    @id
+  imie String
+}`}</code>
+            </pre>
+            <p className="text-sm mt-3">
+              <strong>Config jest tylko raz!</strong> Nie musisz pisać go przy każdym modelu. 
+              Jeśli masz 300 modeli i chcesz zmienić bazę, zmieniasz tylko config (jedna linijka)!
+            </p>
+          </div>
+
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h3 className="text-2xl font-bold mb-4">🔑 Config File 1: schema.prisma (datasource)</h3>
+            <p className="text-sm mb-2">Na górze pliku schema.prisma:</p>
+            <pre className="bg-black/50 rounded p-3 text-xs">
+              <code className="text-purple-400">{`datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}`}</code>
+            </pre>
+            <p className="text-xs mt-2 mb-3 opacity-70">
+              <strong>provider</strong> = typ bazy (sqlite, postgresql, mysql)<br/>
+              <strong>url</strong> = adres bazy (z pliku .env)
+            </p>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-6 border-2 border-yellow-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔑 Config File 2: .env (DATABASE_URL)</h3>
+            <p className="text-sm mb-2">Plik .env zawiera URL do bazy:</p>
+            <div className="space-y-2">
+              <div className="bg-white/10 rounded p-3">
+                <p className="text-xs mb-1"><strong>SQLite:</strong></p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-yellow-400">DATABASE_URL="file:./database.db"</code>
+                </pre>
+              </div>
+              <div className="bg-white/10 rounded p-3">
+                <p className="text-xs mb-1"><strong>PostgreSQL:</strong></p>
+                <pre className="bg-black/50 rounded p-2 text-xs">
+                  <code className="text-yellow-400">DATABASE_URL="postgresql://user:pass@host/db"</code>
+                </pre>
+              </div>
+            </div>
+            <p className="text-sm mt-3">
+              Zmieniasz tylko URL - kod zostaje taki sam!
+            </p>
+          </div>
+
+          <div className="bg-red-500/20 rounded-xl p-6 border-2 border-red-500/50">
+            <h3 className="text-2xl font-bold mb-4">🔄 Jak zmienić bazę danych?</h3>
+            <p className="text-sm mb-3">Masz 300 modeli i chcesz zmienić z SQLite na PostgreSQL:</p>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/10 rounded p-2">
+                <strong>Krok 1:</strong> Zmień provider w schema.prisma (jedna linijka!)
+                <pre className="bg-black/50 rounded p-2 text-xs mt-1">
+                  <code className="text-red-300">{`provider = "postgresql"  // było: "sqlite"`}</code>
+                </pre>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <strong>Krok 2:</strong> Zmień DATABASE_URL w .env
+                <pre className="bg-black/50 rounded p-2 text-xs mt-1">
+                  <code className="text-red-300">DATABASE_URL="postgresql://..."</code>
+                </pre>
+              </div>
+              <div className="bg-white/10 rounded p-2">
+                <strong>Gotowe!</strong> Wszystkie 300 modeli działają z nową bazą - zmieniłeś tylko config!
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
+            <strong>💡 To jest siła Repository Pattern!</strong> Kod nie wie jaka to baza - tylko używa metod. 
+            Zmieniasz bazę przez config (jedna linijka), a kod zostaje taki sam!
           </div>
         </div>
       )
