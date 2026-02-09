@@ -396,88 +396,134 @@ server.listen(3000, () => {
       )
     },
     {
-      id: 'express-framework',
-      title: 'Express.js - Framework na sterydach',
-      icon: '🚂',
+      id: 'nextjs-framework',
+      title: 'Next.js - Framework który rozwiązuje wszystko',
+      icon: '▲',
       content: (
         <div className="space-y-6">
           <p className="text-xl">
-            <strong className="text-blue-400">Express.js</strong> to najpopularniejszy framework dla Node.js. 
-            Robi wszystko <strong>prostsze i szybsze</strong>!
+            <strong className="text-purple-400">Next.js</strong> to framework React który 
+            <strong> rozwiązuje wszystkie problemy</strong> - routing, API, rendering, wszystko w jednym!
           </p>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-red-500/20 rounded-xl p-5">
-              <h4 className="text-lg font-bold mb-3 text-red-400">❌ Czysty Node.js</h4>
-              <pre className="bg-black/50 rounded p-3 text-xs">
-                <code className="text-white/70">{`const server = http.createServer((req, res) => {
-  if (req.url === '/' && req.method === 'GET') {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<h1>Home</h1>');
-  } else if (req.url === '/about') {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<h1>About</h1>');
-  }
-  // Dużo kodu...
-});`}</code>
-              </pre>
-              <p className="text-xs mt-2 opacity-70">Dużo pisania, mało czytelne</p>
+              <h4 className="text-lg font-bold mb-3 text-red-400">❌ Bez Next.js</h4>
+              <p className="text-xs mb-2 opacity-70">Musisz instalować i konfigurować:</p>
+              <ul className="text-xs space-y-1 opacity-70">
+                <li>• React Router (routing)</li>
+                <li>• Express.js (API)</li>
+                <li>• Webpack/Vite (bundler)</li>
+                <li>• Babel (transpilacja)</li>
+                <li>• SSR setup (ręcznie)</li>
+                <li>• Image optimization (ręcznie)</li>
+              </ul>
+              <p className="text-xs mt-2 opacity-70">Dużo konfiguracji, wiele problemów! 😫</p>
             </div>
 
             <div className="bg-green-500/20 rounded-xl p-5">
-              <h4 className="text-lg font-bold mb-3 text-green-400">✅ Express.js</h4>
-              <pre className="bg-black/50 rounded p-3 text-xs">
-                <code className="text-green-400">{`const express = require('express');
-const app = express();
-
-app.get('/', (req, res) => {
-  res.send('<h1>Home</h1>');
-});
-
-app.get('/about', (req, res) => {
-  res.send('<h1>About</h1>');
-});
-
-app.listen(3000);`}</code>
-              </pre>
-              <p className="text-xs mt-2 opacity-70">Krótkie, czytelne, eleganckie!</p>
+              <h4 className="text-lg font-bold mb-3 text-green-400">✅ Z Next.js</h4>
+              <p className="text-xs mb-2 opacity-70">Wszystko wbudowane:</p>
+              <ul className="text-xs space-y-1 opacity-70">
+                <li>✓ File-based routing</li>
+                <li>✓ API Routes (wbudowane!)</li>
+                <li>✓ Bundler (Turbopack)</li>
+                <li>✓ TypeScript (zero config)</li>
+                <li>✓ SSR/SSG/CSR (wybierasz)</li>
+                <li>✓ Image optimization</li>
+              </ul>
+              <p className="text-xs mt-2 opacity-70">Zero konfiguracji, wszystko działa! 🎉</p>
             </div>
           </div>
 
-          <div className="bg-blue-500/20 rounded-xl p-5">
-            <h4 className="text-xl font-bold mb-3 text-blue-400">🎯 Co daje Express?</h4>
+          <div className="bg-blue-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3 text-blue-400">🎯 Co daje Next.js?</h4>
             <div className="grid md:grid-cols-2 gap-3 text-sm">
               <div className="bg-white/10 rounded p-3">
-                <strong>🛣️ Routing</strong>
-                <p className="text-xs mt-1 opacity-70">app.get(), app.post(), app.put(), app.delete()</p>
+                <strong>🛣️ File-based Routing</strong>
+                <p className="text-xs mt-1 opacity-70">app/page.tsx → automatycznie /</p>
+                <p className="text-xs opacity-70">Nie potrzebujesz React Router!</p>
               </div>
               <div className="bg-white/10 rounded p-3">
-                <strong>🔌 Middleware</strong>
-                <p className="text-xs mt-1 opacity-70">Funkcje między requestem a response</p>
+                <strong>🔌 API Routes</strong>
+                <p className="text-xs mt-1 opacity-70">app/api/route.ts → automatycznie /api</p>
+                <p className="text-xs opacity-70">Nie potrzebujesz Express!</p>
               </div>
               <div className="bg-white/10 rounded p-3">
-                <strong>📄 Template engines</strong>
-                <p className="text-xs mt-1 opacity-70">EJS, Pug, Handlebars</p>
+                <strong>⚡ Server Components</strong>
+                <p className="text-xs mt-1 opacity-70">Dostęp do bazy, API keys, zero JS</p>
+                <p className="text-xs opacity-70">Szybsze niż tradycyjne SSR!</p>
               </div>
               <div className="bg-white/10 rounded p-3">
-                <strong>🍪 Cookies & Sessions</strong>
-                <p className="text-xs mt-1 opacity-70">Łatwa obsługa autoryzacji</p>
+                <strong>🎨 Image Optimization</strong>
+                <p className="text-xs mt-1 opacity-70">Automatyczne resize, lazy loading</p>
+                <p className="text-xs opacity-70">Zero konfiguracji!</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-purple-500/20 rounded-xl p-5">
+          <div className="bg-purple-500/20 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-3 text-purple-400">💻 Przykład: API w Next.js</h4>
+            <p className="text-sm mb-3">Nie potrzebujesz Express - Next.js ma to wbudowane!</p>
+            <pre className="bg-black/50 rounded p-4 text-xs overflow-x-auto">
+              <code className="text-green-400">{`// app/api/produkty/route.ts
+// To automatycznie staje się /api/produkty
+
+export async function GET() {
+  // Masz dostęp do bazy, env variables...
+  const db = getDatabase();
+  const produkty = db.prepare('SELECT * FROM produkty').all();
+  return Response.json({ data: produkty });
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  // Logika...
+  return Response.json({ success: true });
+}
+
+// To wszystko! Nie potrzebujesz Express!`}</code>
+            </pre>
+            <p className="text-xs mt-3 opacity-70">
+              <strong>Zero konfiguracji!</strong> Stwórz plik → automatycznie endpoint!
+            </p>
+          </div>
+
+          <div className="bg-green-500/20 rounded-xl p-5">
             <h4 className="text-lg font-bold mb-3">🚀 Szybki start</h4>
             <div className="space-y-2 text-sm bg-black/30 rounded p-3">
-              <code className="text-blue-400">$ npm init -y</code><br/>
-              <code className="text-blue-400">$ npm install express</code><br/>
-              <code className="text-green-400">// Stwórz server.js i gotowe!</code>
+              <code className="text-blue-400">$ npx create-next-app@latest</code><br/>
+              <code className="text-green-400">// Gotowe! Routing, API, wszystko działa!</code>
             </div>
+            <p className="text-xs mt-2 opacity-70">
+              Next.js instaluje się z React, TypeScript, Tailwind - wszystko gotowe!
+            </p>
+          </div>
+
+          <div className="bg-orange-500/20 rounded-xl p-4 border-2 border-orange-500/50">
+            <strong className="text-orange-400">⚠️ Ważne w naszym projekcie:</strong>
+            <p className="text-sm mt-2">
+              W tej aplikacji <strong>NIE używamy Express</strong>! 
+              Next.js ma <strong>wbudowane API Routes</strong> które robią to samo - routing, 
+              obsługa requestów, wszystko!
+            </p>
+            <div className="mt-3 bg-white/10 rounded p-3 text-xs">
+              <strong>Next.js API Routes:</strong>
+              <code className="block mt-1 bg-black/30 p-2 rounded">
+                app/api/produkty/route.ts → automatycznie /api/produkty
+              </code>
+              <p className="mt-2 opacity-70">
+                Nie potrzebujesz Express - Next.js to załatwia! 🎯
+              </p>
+            </div>
+            <p className="text-xs mt-3 opacity-80">
+              Express jest świetny do nauki konceptów Node.js, ale w Next.js nie jest potrzebny.
+            </p>
           </div>
 
           <div className="bg-yellow-500/20 rounded-xl p-4 border border-yellow-500/50">
-            <strong>⭐ Ciekawostka:</strong> Express.js ma ponad 25 milionów pobrań tygodniowo! 
-            To standard w Node.js development.
+            <strong>⭐ Ciekawostka:</strong> Next.js jest używany przez Netflix, Twitch, GitHub, 
+            TikTok, Nike - największe firmy świata!
           </div>
         </div>
       )

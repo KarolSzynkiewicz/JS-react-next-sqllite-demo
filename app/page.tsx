@@ -16,6 +16,7 @@ import { crudRestApiLesson } from "./lessons/crud-rest-api";
 import { nextjsRoutingLesson } from "./lessons/nextjs-routing";
 import { apiIntegrationLesson } from "./lessons/api-integration";
 import { tailwindBasicsLesson } from "./lessons/tailwind-basics";
+import { ormBasicsLesson } from "./lessons/orm-basics";
 
 // All available lessons
 const allLessons = [
@@ -26,6 +27,7 @@ const allLessons = [
   nextjsRoutingLesson,
   apiIntegrationLesson,
   tailwindBasicsLesson,
+  ormBasicsLesson,
 ];
 
 export default function Home() {
