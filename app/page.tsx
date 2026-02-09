@@ -8,36 +8,55 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import LessonSlider from "./components/LessonSlider";
+import LessonSlider, { Lesson } from "./components/LessonSlider";
 import { javascriptBasicsLesson } from "./lessons/javascript-basics";
+import { nodejsBasicsLesson } from "./lessons/nodejs-basics";
+import { sqliteBasicsLesson } from "./lessons/sqlite-basics";
+import { crudRestApiLesson } from "./lessons/crud-rest-api";
+import { nextjsRoutingLesson } from "./lessons/nextjs-routing";
+import { apiIntegrationLesson } from "./lessons/api-integration";
+import { tailwindBasicsLesson } from "./lessons/tailwind-basics";
+
+// All available lessons
+const allLessons = [
+  javascriptBasicsLesson,
+  nodejsBasicsLesson,
+  sqliteBasicsLesson,
+  crudRestApiLesson,
+  nextjsRoutingLesson,
+  apiIntegrationLesson,
+  tailwindBasicsLesson,
+];
 
 export default function Home() {
-  const [showLesson, setShowLesson] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
-  const handleStartLesson = () => {
-    setShowLesson(true);
+  const handleStartLesson = (lesson: Lesson) => {
+    setSelectedLesson(lesson);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleCompleteLesson = () => {
-    setCompletedLessons([...completedLessons, 'js-basics']);
-    setShowLesson(false);
+    if (selectedLesson && !completedLessons.includes(selectedLesson.id)) {
+      setCompletedLessons([...completedLessons, selectedLesson.id]);
+    }
+    setSelectedLesson(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (showLesson) {
+  if (selectedLesson) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 py-16">
         <div className="container mx-auto px-4">
           <button
-            onClick={() => setShowLesson(false)}
+            onClick={() => setSelectedLesson(null)}
             className="mb-6 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold transition-all flex items-center gap-2"
           >
             ← Wróć do strony głównej
           </button>
           <LessonSlider 
-            lesson={javascriptBasicsLesson} 
+            lesson={selectedLesson} 
             onComplete={handleCompleteLesson}
           />
         </div>
@@ -84,65 +103,57 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Podstawy JavaScript - Interaktywna Lekcja */}
+      {/* All Lessons - Grid */}
       <section className="container mx-auto px-4 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-3xl p-8 md:p-12 border-2 border-yellow-500/50">
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-6xl">📘</span>
-              <div>
-                <h2 className="text-4xl md:text-5xl font-black text-white mb-2">
-                  Zacznij od podstaw!
-                </h2>
-                <p className="text-xl text-white/90">
-                  Interaktywna lekcja JavaScript dla początkujących
-                </p>
-              </div>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+              📚 Interaktywne Lekcje
+            </h2>
+            <p className="text-xl text-white/80">
+              Zacznij od podstaw! Każda lekcja to 8 slajdów z praktycznymi przykładami
+            </p>
+            <div className="mt-4 flex items-center justify-center gap-4 text-white/70">
+              <span>🎯 Poziom: Początkujący</span>
+              <span>•</span>
+              <span>⏱️ ~15 min każda</span>
+              <span>•</span>
+              <span>🎉 {completedLessons.length}/{allLessons.length} ukończone</span>
             </div>
+          </div>
 
-            <div className="bg-white/10 rounded-xl p-6 mb-6">
-              <h3 className="text-2xl font-bold text-white mb-4">📚 Czego się nauczysz?</h3>
-              <div className="grid md:grid-cols-2 gap-3 text-white/90">
-                <div className="flex items-center gap-2">
-                  <span>✓</span> Co to jest JavaScript
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allLessons.map((lesson) => {
+              const isCompleted = completedLessons.includes(lesson.id);
+              return (
+                <div 
+                  key={lesson.id}
+                  className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-purple-500 transition-all hover:scale-105 relative overflow-hidden"
+                >
+                  {isCompleted && (
+                    <div className="absolute top-4 right-4 bg-green-500/20 border border-green-500 rounded-full px-3 py-1 text-xs font-semibold text-green-400">
+                      ✓ Ukończono
+                    </div>
+                  )}
+                  <div className="text-6xl mb-4">{lesson.icon}</div>
+                  <h3 className="text-2xl font-bold text-white mb-3">
+                    {lesson.title}
+                  </h3>
+                  <p className="text-white/70 mb-4 text-sm">
+                    {lesson.description}
+                  </p>
+                  <button
+                    onClick={() => handleStartLesson(lesson)}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all"
+                  >
+                    {isCompleted ? '📖 Przeglądaj ponownie' : '🚀 Rozpocznij'}
+                  </button>
+                  <div className="mt-3 text-center text-xs text-white/50">
+                    8 slajdów • ~15 minut
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span>✓</span> Zmienne (let, const, var)
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>✓</span> Typy danych
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>✓</span> Typowanie (JS vs TS)
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>✓</span> Obiekty
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>✓</span> OOP i DOM
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <button
-                onClick={handleStartLesson}
-                className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xl font-bold rounded-2xl hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-2xl"
-              >
-                🚀 Rozpocznij Lekcję
-              </button>
-              <div className="text-white/70 text-sm">
-                ⏱️ ~15 minut • 8 slajdów • Poziom: Początkujący
-              </div>
-            </div>
-
-            {completedLessons.includes('js-basics') && (
-              <div className="mt-4 bg-green-500/20 border border-green-500 rounded-xl p-4 text-center">
-                <span className="text-2xl mr-2">🎉</span>
-                <strong className="text-green-400">Ukończono!</strong>
-                <span className="text-white/80"> - Możesz przejrzeć lekcję ponownie</span>
-              </div>
-            )}
+              );
+            })}
           </div>
         </div>
       </section>
