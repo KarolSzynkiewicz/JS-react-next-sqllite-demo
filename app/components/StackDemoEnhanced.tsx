@@ -177,7 +177,7 @@ export default function StackDemoEnhanced({ onAction, onStepChange }: StackDemoP
   const [performanceMetrics, setPerformanceMetrics] = useState<Record<string, number>>({});
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   // ============================================================================
   // HELPER FUNCTIONS
