@@ -20,6 +20,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navigation from "./components/Navigation";
 
 /**
  * Konfiguracja czcionek z Google Fonts
@@ -80,6 +81,9 @@ export default function RootLayout({
           - antialiased: lepsze wygładzanie tekstu
         */
       >
+        {/* Global Navigation */}
+        <Navigation />
+        
         {/* 
           {children} - tutaj renderuje się zawartość aktualnej strony
           

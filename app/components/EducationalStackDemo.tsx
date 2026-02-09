@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StackDemoEnhanced from './StackDemoEnhanced';
 import InteractiveFlowChart from './InteractiveFlowChart';
 import LiveCodeViewer from './LiveCodeViewer';
 import InteractiveQuiz from './InteractiveQuiz';
+import BestPractices from './BestPractices';
 import { StateLog } from './StateTracker';
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
-type Tab = 'demo' | 'flowchart' | 'code' | 'quiz' | 'resources';
+type Tab = 'demo' | 'flowchart' | 'code' | 'quiz' | 'practices' | 'resources';
 
 interface TabConfig {
   id: Tab;
@@ -52,6 +53,12 @@ const TABS: TabConfig[] = [
     label: 'Test Wiedzy',
     icon: '🎯',
     description: 'Sprawdź swoją wiedzę o React, Next.js i SQLite'
+  },
+  {
+    id: 'practices',
+    label: 'Najlepsze Praktyki',
+    icon: '💎',
+    description: 'DRY, reużywalne komponenty, czysty kod'
   },
   {
     id: 'resources',
@@ -185,6 +192,17 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
   const [activeNodes, setActiveNodes] = useState<Set<string>>(new Set());
   const [currentStep, setCurrentStep] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Check URL params for tab selection
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam && ['demo', 'flowchart', 'code', 'quiz', 'practices', 'resources'].includes(tabParam)) {
+        setActiveTab(tabParam as Tab);
+      }
+    }
+  }, []);
 
   // Helper do logowania
   const logAction = (log: Omit<StateLog, 'id' | 'timestamp'>) => {
@@ -434,6 +452,10 @@ export default function EducationalStackDemo({ onAction }: EducationalStackDemoP
               </div>
             </div>
           </div>
+        )}
+
+        {activeTab === 'practices' && (
+          <BestPractices />
         )}
 
         {activeTab === 'resources' && (

@@ -1,132 +1,279 @@
 /**
- * STRONA STARTOWA - app/page.tsx
+ * STRONA GŁÓWNA - Full-Stack Academy
  * 
- * W Next.js App Router, plik page.tsx w katalogu app/ automatycznie staje się stroną główną.
- * Ta strona jest dostępna pod adresem: http://localhost:3000/
- * 
- * Jak działa routing w Next.js App Router:
- * 1. Każdy folder w katalogu app/ reprezentuje segment URL-a
- * 2. Plik page.tsx wewnątrz folderu definiuje stronę dla tego segmentu
- * 3. Przykład: app/o-nas/page.tsx → URL: /o-nas
- * 4. Przykład: app/blog/[id]/page.tsx → URL: /blog/123 (dynamiczny routing)
- * 
- * Komponenty w Next.js:
- * - Muszą być eksportowane jako "default export"
- * - Mogą być Server Components (domyślnie) lub Client Components (z "use client")
- * - Server Components renderują się na serwerze (szybsze, lepsze SEO)
+ * Interaktywna platforma edukacyjna do nauki React, Next.js i SQLite
  */
 
-// Import komponentu Link z Next.js - używamy go do nawigacji między stronami
-// Link zapewnia client-side navigation (szybkie przełączanie bez przeładowania strony)
 import Link from "next/link";
 
-/**
- * Komponent Home - główna strona aplikacji
- * Jest to Server Component (domyślnie w Next.js 13+)
- * Renderuje się na serwerze przed wysłaniem do przeglądarki
- */
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <main className="flex min-h-screen w-full max-w-4xl flex-col items-center justify-center py-16 px-8">
-        
-        {/* Sekcja nagłówkowa */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            🚀 Lekcja Next.js - Routing
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-6xl md:text-7xl font-black text-white mb-6 animate-fadeIn">
+            🎓 Full-Stack Academy
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-            Witaj na stronie startowej! To jest strona główna aplikacji.
+          <p className="text-2xl md:text-3xl text-white/90 mb-8">
+            Naucz się <strong className="text-purple-400">React</strong>, 
+            <strong className="text-blue-400"> Next.js</strong> i 
+            <strong className="text-green-400"> SQLite</strong> przez 
+            <strong className="text-yellow-400"> praktyczne przykłady</strong>
           </p>
-        </div>
+          
+          <div className="flex flex-wrap gap-3 justify-center mb-12">
+            <span className="bg-white/20 backdrop-blur-lg px-6 py-3 rounded-full text-white font-semibold">
+              ⚛️ React 19.2.3
+            </span>
+            <span className="bg-white/20 backdrop-blur-lg px-6 py-3 rounded-full text-white font-semibold">
+              ▲ Next.js 16.1.6
+            </span>
+            <span className="bg-white/20 backdrop-blur-lg px-6 py-3 rounded-full text-white font-semibold">
+              💾 SQLite
+            </span>
+            <span className="bg-white/20 backdrop-blur-lg px-6 py-3 rounded-full text-white font-semibold">
+              🎯 TypeScript
+            </span>
+          </div>
 
-        {/* Sekcja wyjaśniająca routing */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8 w-full">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-            📚 Jak działa routing w Next.js?
-          </h2>
-          <div className="space-y-4 text-gray-700 dark:text-gray-300">
-            <p>
-              <strong>1. File-based Routing:</strong> Struktura folderów w katalogu <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">app/</code> automatycznie tworzy trasy.
-            </p>
-            <p>
-              <strong>2. Ta strona:</strong> Plik <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">app/page.tsx</code> odpowiada adresowi <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/</code>
-            </p>
-            <p>
-              <strong>3. Inne strony:</strong> <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">app/o-nas/page.tsx</code> → <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">/o-nas</code>
-            </p>
-            <p>
-              <strong>4. Link Component:</strong> Używamy <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">Link</code> zamiast <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">a</code> dla client-side navigation.
-            </p>
+          <Link
+            href="/demo"
+            className="inline-block px-10 py-5 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xl font-bold rounded-2xl hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-2xl"
+          >
+            🚀 Rozpocznij Naukę
+          </Link>
+        </div>
+      </section>
+
+      {/* Co to jest DOM? */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 md:p-12 border border-white/20">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 flex items-center gap-4">
+              <span className="text-6xl">🌳</span>
+              Co to jest DOM?
+            </h2>
+            
+            <div className="space-y-6 text-white/90 text-lg leading-relaxed">
+              <p className="text-xl">
+                <strong className="text-white">DOM (Document Object Model)</strong> to sposób, 
+                w jaki przeglądarka reprezentuje stronę internetową jako "drzewo" elementów.
+              </p>
+
+              <div className="bg-blue-500/20 rounded-xl p-6">
+                <h3 className="text-2xl font-bold text-white mb-4">🤔 Wyobraź sobie...</h3>
+                <p className="mb-3">
+                  Masz kod HTML swojej strony. Gdy przeglądarka go wczyta, tworzy 
+                  <strong> "mapę"</strong> wszystkich elementów - każdy przycisk, tekst, 
+                  obrazek, div - wszystko!
+                </p>
+                <p>
+                  Ta mapa to właśnie <strong>DOM</strong>. Dzięki niemu JavaScript może:
+                </p>
+                <ul className="list-none space-y-2 mt-3">
+                  <li>✓ Zmieniać tekst na stronie</li>
+                  <li>✓ Dodawać nowe elementy</li>
+                  <li>✓ Usuwać elementy</li>
+                  <li>✓ Reagować na kliknięcia</li>
+                </ul>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-red-500/20 rounded-xl p-6 border-2 border-red-500/50">
+                  <h4 className="text-xl font-bold mb-3 text-red-300">⚠️ Problem z DOM</h4>
+                  <p className="text-sm">
+                    Każda zmiana w DOM (np. zmiana tekstu) jest <strong>powolna</strong>. 
+                    Przeglądarka musi przeliczyć style, układ, przerysować ekran...
+                  </p>
+                  <p className="text-sm mt-2">
+                    W dużej aplikacji setki zmian = <strong>wolna aplikacja</strong> 😢
+                  </p>
+                </div>
+
+                <div className="bg-green-500/20 rounded-xl p-6 border-2 border-green-500/50">
+                  <h4 className="text-xl font-bold mb-3 text-green-300">✅ Virtual DOM (React)</h4>
+                  <p className="text-sm">
+                    React tworzy <strong>"wirtualną kopię"</strong> DOM w pamięci. 
+                    Gdy coś się zmienia, React:
+                  </p>
+                  <ol className="text-sm mt-2 space-y-1 list-decimal list-inside">
+                    <li>Sprawdza co się zmieniło</li>
+                    <li>Zmienia TYLKO to co trzeba</li>
+                    <li>Robi to <strong>super szybko</strong>! ⚡</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div className="bg-purple-500/20 rounded-xl p-6">
+                <h4 className="text-2xl font-bold mb-3">⚡ Przykład w praktyce</h4>
+                <div className="space-y-3 text-base">
+                  <p>
+                    <strong>Bez React (zwykły JavaScript):</strong><br/>
+                    Chcesz zaktualizować listę 100 produktów? Musisz usunąć starą listę 
+                    i dodać nową. Przeglądarka przerysowuje WSZYSTKO. Wolne! 🐌
+                  </p>
+                  <p>
+                    <strong>Z React (Virtual DOM):</strong><br/>
+                    React sprawdza: "O, zmienił się tylko jeden produkt". Aktualizuje TYLKO 
+                    ten jeden element. Reszta bez zmian. Szybkie! 🚀
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl p-6 border border-yellow-500/30">
+                <div className="flex items-start gap-3">
+                  <span className="text-3xl">💡</span>
+                  <div>
+                    <strong className="text-yellow-300 text-xl">Dlaczego to ważne?</strong>
+                    <p className="mt-2">
+                      Dzięki Virtual DOM, React jest <strong>szybki</strong> i 
+                      <strong> wydajny</strong>. Możesz budować duże aplikacje 
+                      bez martwienia się o wydajność!
+                    </p>
+                    <p className="mt-2">
+                      Ty piszesz kod, React zajmuje się optymalizacją 🎯
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Przyciski nawigacyjne - przykład użycia Link */}
-        <div className="flex flex-wrap gap-4 justify-center">
-          {/* 
-            Link z Next.js - to jest kluczowy komponent do nawigacji
-            Właściwości:
-            - href: ścieżka do strony (zgodna ze strukturą folderów)
-            - className: style Tailwind CSS
-            - Prefetch: automatycznie pobiera stronę w tle (domyślnie true)
-          */}
-          <Link 
-            href="/o-nas"
-            className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold text-lg hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            👉 Przejdź do strony "O nas"
+      {/* Główne Sekcje */}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-4xl md:text-5xl font-black text-white text-center mb-12">
+          📚 Czego się nauczysz?
+        </h2>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {/* Interactive Learning Platform */}
+          <Link href="/demo" className="group">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-purple-500 transition-all hover:scale-105">
+              <div className="text-5xl mb-4">🚀</div>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Platforma Interaktywna
+              </h3>
+              <p className="text-white/70 mb-4">
+                Zobacz krok po kroku jak dane przepływają od React przez API do bazy danych
+              </p>
+              <div className="flex items-center gap-2 text-purple-400 font-semibold group-hover:gap-4 transition-all">
+                Eksploruj <span>→</span>
+              </div>
+            </div>
           </Link>
-          
-          <Link 
-            href="/produkty"
-            className="px-8 py-4 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            🗄️ CRUD z SQLite - Produkty
+
+          {/* CRUD Operations */}
+          <Link href="/produkty" className="group">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-green-500 transition-all hover:scale-105">
+              <div className="text-5xl mb-4">🗄️</div>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                CRUD z SQLite
+              </h3>
+              <p className="text-white/70 mb-4">
+                Naucz się tworzyć, odczytywać, aktualizować i usuwać dane z bazy
+              </p>
+              <div className="flex items-center gap-2 text-green-400 font-semibold group-hover:gap-4 transition-all">
+                Praktykuj <span>→</span>
+              </div>
+            </div>
           </Link>
-          
-          <Link 
-            href="/stack"
-            className="px-8 py-4 bg-purple-600 text-white rounded-lg font-semibold text-lg hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            📚 Dokumentacja Stacku
+
+          {/* Best Practices */}
+          <Link href="/demo?tab=practices" className="group">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-yellow-500 transition-all hover:scale-105">
+              <div className="text-5xl mb-4">💎</div>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Najlepsze Praktyki
+              </h3>
+              <p className="text-white/70 mb-4">
+                Poznaj DRY, reużywalne komponenty i czysty kod
+              </p>
+              <div className="flex items-center gap-2 text-yellow-400 font-semibold group-hover:gap-4 transition-all">
+                Ucz się <span>→</span>
+              </div>
+            </div>
           </Link>
-          
-          <Link 
-            href="/pogoda"
-            className="px-8 py-4 bg-cyan-600 text-white rounded-lg font-semibold text-lg hover:bg-cyan-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            🌤️ Sprawdź Pogodę
+
+          {/* API Integration */}
+          <Link href="/pogoda" className="group">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-cyan-500 transition-all hover:scale-105">
+              <div className="text-5xl mb-4">🌤️</div>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Integracja API
+              </h3>
+              <p className="text-white/70 mb-4">
+                Pobieraj dane z zewnętrznych API (przykład: pogoda)
+              </p>
+              <div className="flex items-center gap-2 text-cyan-400 font-semibold group-hover:gap-4 transition-all">
+                Testuj <span>→</span>
+              </div>
+            </div>
           </Link>
-          
-          <Link 
-            href="/cykl-requestu"
-            className="px-8 py-4 bg-orange-600 text-white rounded-lg font-semibold text-lg hover:bg-orange-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            🔄 Cykl Życia Requestu
+
+          {/* Database Seeding */}
+          <Link href="/lokalizacje" className="group">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-teal-500 transition-all hover:scale-105">
+              <div className="text-5xl mb-4">📍</div>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Seeder & Factory
+              </h3>
+              <p className="text-white/70 mb-4">
+                Automatycznie generuj testowe dane do bazy
+              </p>
+              <div className="flex items-center gap-2 text-teal-400 font-semibold group-hover:gap-4 transition-all">
+                Generuj <span>→</span>
+              </div>
+            </div>
           </Link>
-          
-          <Link 
-            href="/lokalizacje"
-            className="px-8 py-4 bg-teal-600 text-white rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            📍 Lokalizacje + Seeder
-          </Link>
-          
-          <Link 
-            href="/demo"
-            className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg font-semibold text-lg hover:from-pink-700 hover:to-rose-700 transition-colors shadow-md hover:shadow-lg"
-          >
-            🎯 Stack Demo - Pełna demonstracja
+
+          {/* Flow Visualization */}
+          <Link href="/demo?tab=flowchart" className="group">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-pink-500 transition-all hover:scale-105">
+              <div className="text-5xl mb-4">🗺️</div>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Wizualizacja Flow
+              </h3>
+              <p className="text-white/70 mb-4">
+                Zobacz jak dane wędrują przez cały stack
+              </p>
+              <div className="flex items-center gap-2 text-pink-400 font-semibold group-hover:gap-4 transition-all">
+                Obserwuj <span>→</span>
+              </div>
+            </div>
           </Link>
         </div>
+      </section>
 
-        {/* Dodatkowe informacje */}
-        <div className="mt-12 text-center text-gray-600 dark:text-gray-400">
-          <p className="text-sm">
-            💡 Kliknij przycisk powyżej, aby zobaczyć jak działa nawigacja między stronami!
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="max-w-3xl mx-auto bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-12">
+          <h2 className="text-4xl font-black text-white mb-4">
+            Gotowy żeby zacząć? 🎯
+          </h2>
+          <p className="text-xl text-white/90 mb-8">
+            Przejdź do interaktywnej platformy i zobacz jak wszystko działa w praktyce!
           </p>
+          <Link
+            href="/demo"
+            className="inline-block px-10 py-5 bg-white text-purple-600 text-xl font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl"
+          >
+            🚀 Zacznij Teraz
+          </Link>
         </div>
-      </main>
+      </section>
+
+      {/* Footer */}
+      <footer className="container mx-auto px-4 py-8 text-center text-white/50">
+        <p>
+          Stworzone z ❤️ jako edukacyjna platforma full-stack
+        </p>
+        <p className="text-sm mt-2">
+          React 19.2.3 • Next.js 16.1.6 • SQLite • TypeScript • Tailwind CSS
+        </p>
+      </footer>
     </div>
   );
 }
