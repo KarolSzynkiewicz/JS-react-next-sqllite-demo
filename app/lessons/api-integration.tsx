@@ -188,7 +188,7 @@ fetch('https://api.example.com/users')
                 <p className="text-xs mt-1 opacity-70">Wysyłamy dane (nie pobieramy)</p>
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">headers: {`{ 'Content-Type': 'application/json' }`}</code>
+                <code className="text-green-400">{'headers: { \'Content-Type\': \'application/json\' }'}</code>
                 <p className="text-xs mt-1 opacity-70">Mówimy serwerowi: "wysyłam JSON"</p>
               </div>
               <div className="bg-white/10 rounded p-2">
@@ -466,7 +466,7 @@ const [error, setError] = useState<string | null>(null);`}</code>
             <h4 className="text-lg font-bold mb-3">📝 Wyjaśnienie linia po linii:</h4>
             <div className="space-y-2 text-sm">
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">try { ... }</code>
+                <code className="text-green-400">{'try { ... }'}</code>
                 <p className="text-xs mt-1 opacity-70">Spróbuj wykonać kod - jeśli błąd, przejdź do catch</p>
               </div>
               <div className="bg-white/10 rounded p-2">
@@ -478,15 +478,15 @@ const [error, setError] = useState<string | null>(null);`}</code>
                 <p className="text-xs mt-1 opacity-70">WAŻNE! 404/500 nie rzuca error - musimy sprawdzić ręcznie!</p>
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">throw new Error(...)</code>
+                <code className="text-green-400">{'throw new Error(...)'}</code>
                 <p className="text-xs mt-1 opacity-70">Rzuć błąd żeby catch go złapał</p>
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">catch (err) { ... }</code>
+                <code className="text-green-400">{'catch (err) { ... }'}</code>
                 <p className="text-xs mt-1 opacity-70">Złap błąd i zapisz w state</p>
               </div>
               <div className="bg-white/10 rounded p-2">
-                <code className="text-green-400">finally { setLoading(false) }</code>
+                <code className="text-green-400">{'finally { setLoading(false) }'}</code>
                 <p className="text-xs mt-1 opacity-70">Zawsze wykonaj - nawet jeśli był błąd</p>
               </div>
             </div>
